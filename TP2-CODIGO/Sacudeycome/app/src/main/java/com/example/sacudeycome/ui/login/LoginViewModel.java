@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
+import com.example.sacudeycome.R;
 import com.example.sacudeycome.data.LoginRepository;
 import com.example.sacudeycome.data.Result;
 import com.example.sacudeycome.data.model.LoggedInUser;
-import com.example.sacudeycome.R;
 
 public class LoginViewModel extends ViewModel {
 

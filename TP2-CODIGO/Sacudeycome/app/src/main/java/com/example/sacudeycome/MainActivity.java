@@ -3,22 +3,23 @@ package com.example.sacudeycome;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.webkit.URLUtil;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.sacudeycome.ui.login.LoginActivity;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = "";
     private String tokenanterior = "";
+    private String activity2 = "Login / Registro / Activity2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initQR() {
-
         // creo el detector qr
         BarcodeDetector barcodeDetector =
                 new BarcodeDetector.Builder(this)
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         != PackageManager.PERMISSION_GRANTED) {
 
                     // verificamos version minima de android 7.0
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (shouldShowRequestPermissionRationale(
                                 Manifest.permission.CAMERA)) ;
                         requestPermissions(new String[]{Manifest.permission.CAMERA},
@@ -109,23 +110,16 @@ public class MainActivity extends AppCompatActivity {
                     // verificamos que el token anterior no se igual al actual
                     // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
+                        tokenanterior = token; // guardamos el ultimo token proceado
 
-                        // guardamos el ultimo token proceado
-                        tokenanterior = token;
                         Log.i("token", token);
-
-                        if (URLUtil.isValidUrl(token)) {
-                            // si es una URL valida abre el navegador
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
-                            startActivity(browserIntent);
-                        } else {
-                            // comparte en otras apps
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, token);
-                            shareIntent.setType("text/plain");
-                            startActivity(shareIntent);
-                        }
+                        Intent pasarActivity = new Intent(MainActivity.this, LoginActivity.class);
+                        Log.d("Escaneado",token);
+                        if(token.equals(activity2)){
+                            startActivity(pasarActivity);
+                        Log.d("ENTRO","Bien");}
+                        else
+                        { } ///VER MENSAJE DE ERROR
 
                         new Thread(new Runnable() {
                             public void run() {

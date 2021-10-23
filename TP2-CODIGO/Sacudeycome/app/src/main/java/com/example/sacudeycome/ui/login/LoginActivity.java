@@ -23,20 +23,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.R;
-import com.example.sacudeycome.ui.login.LoginViewModel;
-import com.example.sacudeycome.ui.login.LoginViewModelFactory;
-import com.example.sacudeycome.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
+    private com.example.sacudeycome.databinding.ActivityLoginBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = com.example.sacudeycome.databinding.ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
