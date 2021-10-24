@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.R;
-import com.example.sacudeycome.ui.register.RegisterActivity;
+import com.example.sacudeycome.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         binding = com.example.sacudeycome.databinding.ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -46,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = binding.login;
         final Button registerButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
+        registerButton.setEnabled(true);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
