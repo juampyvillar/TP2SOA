@@ -31,6 +31,7 @@ public class ServicesHttp_POST extends IntentService {
 
     protected void onHandleIntent(Intent intent){
         try {
+            Log.d("Pasa por acaa Handle ","Biennnnn1");
             String uri = intent.getExtras().getString("uri");
             JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
             ejecutarPost(uri,datosJson);
@@ -91,6 +92,7 @@ public class ServicesHttp_POST extends IntentService {
 
     protected void ejecutarPost(String uri,JSONObject datosJson){
         String result = POST(uri,datosJson);
+        Log.d("Pasa por acaa POST ","Biennnnn1");
         if(result == null){
             Log.e("Loggeo_Service", "Error en GET:\n" + exception.toString());
             return;
@@ -99,7 +101,7 @@ public class ServicesHttp_POST extends IntentService {
             Log.e("Loggeo_Service","Se recibio response NO_OK");
             return;
         }
-
+        Log.d("Pasa por acaa POST ","Biennnnn2");
         Intent i = new Intent("com.example.intentservice.intent.action.RESPUESTA_OPERACION");
         i.putExtra("datosJson", result);
         sendBroadcast(i);

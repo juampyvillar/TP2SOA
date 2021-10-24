@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_register);
         editNombre = findViewById(R.id.Nombre);
         editApellido = findViewById(R.id.Apellido);
         editDni = findViewById(R.id.DNI);
@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         editPass = findViewById(R.id.password);
 
         buttonRegistrar = findViewById(R.id.register);
+        buttonRegistrar.setEnabled(true);
         buttonRegistrar.setOnClickListener(HandlerCmdRegistrar);
 
         configurarBroadcastReceiver();
@@ -54,23 +55,30 @@ public class RegisterActivity extends AppCompatActivity {
 
     private View.OnClickListener HandlerCmdRegistrar = new View.OnClickListener()
     {
+
             public void onClick (View v)
             {
+                Log.d("Pasa por acaa boton registro","Biennnnn1");
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("Email",editEmail.getText().toString());
-                    obj.put("Env","TEST");
-                    obj.put("Nombre",editNombre.getText().toString());
-                    obj.put("Apellido",editApellido.getText().toString());
-                    obj.put("DNI",Long.parseLong(editDni.getText().toString()));
-                    obj.put("Contraseña",editPass.getText().toString());
-                    obj.put("Comision",COMISION);
-                    obj.put("Grupo",GRUPO);
+                    Log.d("Pasa por acaa boton registro","Biennnnn2");
+                    obj.put("env","TEST");
+                    obj.put("name",editNombre.getText().toString());
+                    obj.put("lastname",editApellido.getText().toString());
+                    obj.put("dni",Long.parseLong(editDni.getText().toString()));
+                    obj.put("email",editEmail.getText().toString());
+                    obj.put("password",editPass.getText().toString());
+                    obj.put("commission",COMISION);
+                    obj.put("group",GRUPO);
 
+                    Log.d("Pasa por acaa boton registro","Biennnnn3");
                     Intent i = new Intent(RegisterActivity.this, ServicesHttp_POST.class);
+                    Log.d("Pasa por acaa boton registro","Biennnnn5");
                     i.putExtra("uri", URI_REGISTER);
-//                    i.putExtra("datosJson", obj.toString());
+                    Log.d("Pasa por acaa boton registro","Biennnnn6");
+                    i.putExtra("datosJson", obj.toString());
                     startService(i);
+                    Log.d("Pasa por acaa boton registro",obj.toString());
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -86,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
     public class ReceptorOperacion extends BroadcastReceiver{
         public void onReceive(Context context, Intent intent){
             try{
+                Log.d("Pasa por acaa","Biennnnn1");
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("Loggeo Main","Datos Json Main Thread: "+datosJsonString);

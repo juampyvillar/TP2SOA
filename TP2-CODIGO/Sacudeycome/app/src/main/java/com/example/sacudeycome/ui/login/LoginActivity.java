@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
-        final Button registerButton = binding.login;
+        final Button registerButton = binding.Register;
         final ProgressBar loadingProgressBar = binding.loading;
         registerButton.setEnabled(true);
 
@@ -128,8 +129,11 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("ENTRO","Bien");
                 Intent pasarActivity = new Intent(LoginActivity.this, RegisterActivity.class);
+                Log.d("ENTRO","Bien2");
                 startActivity(pasarActivity);
+                Log.d("ENTRO","Bien3");
             }
         });
     }
