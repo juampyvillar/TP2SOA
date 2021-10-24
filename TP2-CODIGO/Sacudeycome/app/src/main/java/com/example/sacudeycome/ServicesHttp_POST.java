@@ -1,0 +1,114 @@
+package com.example.sacudeycome;
+
+import android.app.IntentService;
+import android.content.Intent;
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+public class ServicesHttp_POST extends IntentService {
+
+    private Exception exception=null;
+    private HttpURLConnection httpConnection;
+    private URL mUrl;
+
+    public ServicesHttp_POST() { super("ServicesHttp_Get");}
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        Log.i("Loggeo_Service","Service onCreate()");
+    }
+
+    protected void onHandleIntent(Intent intent){
+        try {
+            String uri = intent.getExtras().getString("uri");
+            JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
+            ejecutarPost(uri,datosJson);
+        }catch(Exception e){
+            Log.e("Loggeo_Service","Error: "+e.toString());
+        }
+    }
+
+    private StringBuilder convertInputStreamToString(InputStreamReader inputStream) throws IOException{
+        BufferedReader br = new BufferedReader(inputStream);
+        StringBuilder result = new StringBuilder();
+        String line;
+        while((line = br.readLine()) != null){
+            result.append((line + "\n"));
+        }
+        br.close();
+        return result;
+    }
+
+    private String POST(String uri, JSONObject datosJson){
+        HttpURLConnection urlConnection = null;
+        String result = "";
+        try{
+            URL mUrl = new URL(uri);
+            urlConnection = (HttpURLConnection) mUrl.openConnection();
+            urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setRequestMethod("POST");
+            DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+            wr.write(datosJson.toString().getBytes(StandardCharsets.UTF_8));
+            Log.i("Loggeo_Service","Se va a enviar al servidor"+datosJson.toString());
+            wr.flush();
+            urlConnection.connect();
+            int responseCode = urlConnection.getResponseCode();
+            if((responseCode == HttpURLConnection.HTTP_OK) || (responseCode == HttpURLConnection.HTTP_CREATED)){
+                InputStreamReader inputStream = new InputStreamReader(urlConnection.getInputStream());
+                result = convertInputStreamToString(inputStream).toString();
+            }
+            else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST){
+                InputStreamReader inputStream = new InputStreamReader(urlConnection.getErrorStream());
+                result = convertInputStreamToString(inputStream).toString();
+            }
+            else{
+                result = "NO_OK";
+            }
+            exception = null;
+            wr.close();
+            urlConnection.disconnect();
+            return result;
+
+        }catch(Exception e){
+            exception = e;
+            return null;
+        }
+    }
+
+    protected void ejecutarPost(String uri,JSONObject datosJson){
+        String result = POST(uri,datosJson);
+        if(result == null){
+            Log.e("Loggeo_Service", "Error en GET:\n" + exception.toString());
+            return;
+        }
+        if(result == "NO_OK"){
+            Log.e("Loggeo_Service","Se recibio response NO_OK");
+            return;
+        }
+
+        Intent i = new Intent("com.example.intentservice.intent.action.RESPUESTA_OPERACION");
+        i.putExtra("datosJson", result);
+        sendBroadcast(i);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onCreate();
+        Log.i("Loggeo Service", "Service onDestroy()");
+    }
+}
