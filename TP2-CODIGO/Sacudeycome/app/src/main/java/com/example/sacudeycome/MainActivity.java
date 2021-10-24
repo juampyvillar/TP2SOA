@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,8 +19,6 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private String token = "";
     private String tokenanterior = "";
     private String activity2 = "Login / Registro / Activity2";
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             public void release() {
             }
 
-
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
@@ -111,15 +110,17 @@ public class MainActivity extends AppCompatActivity {
                     // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
                         tokenanterior = token; // guardamos el ultimo token proceado
-
-                        Log.i("token", token);
                         Intent pasarActivity = new Intent(MainActivity.this, LoginActivity.class);
                         Log.d("Escaneado",token);
                         if(token.equals(activity2)){
                             startActivity(pasarActivity);
                         Log.d("ENTRO","Bien");}
                         else
-                        { } ///VER MENSAJE DE ERROR
+                        {
+//                            Context context = getApplicationContext();
+//                            Log.d("ENTRO",context.toString());
+//                            toast = Toast.makeText(context, "El QR escaneado no es correcto", Toast.LENGTH_SHORT);
+                        }
 
                         new Thread(new Runnable() {
                             public void run() {
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                         wait(5000);
                                         // limpiamos el token
                                         tokenanterior = "";
+
                                     }
                                 } catch (InterruptedException e) {
                                     // TODO Auto-generated catch block

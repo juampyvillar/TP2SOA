@@ -1,11 +1,10 @@
-package com.example.sacudeycome.ui.login;
+package com.example.sacudeycome.ui.register;
 
 import android.app.Activity;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -24,27 +23,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.R;
-import com.example.sacudeycome.ui.register.RegisterActivity;
+import com.example.sacudeycome.databinding.ActivityRegisterBinding;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private com.example.sacudeycome.databinding.ActivityLoginBinding binding;
+    private com.example.sacudeycome.databinding.ActivityRegisterBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = com.example.sacudeycome.databinding.ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
+        final EditText usernameEditText = binding.Nombre;
+        final EditText apellidoEditText = binding.Apellido;
+        final EditText dniEditText = binding.DNI;
+        final EditText emailEditText = binding.Email;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final Button registerButton = binding.login;
+        final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
+                registerButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
@@ -114,20 +114,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
-            }
-        });
-
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent pasarActivity = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(pasarActivity);
             }
         });
     }
