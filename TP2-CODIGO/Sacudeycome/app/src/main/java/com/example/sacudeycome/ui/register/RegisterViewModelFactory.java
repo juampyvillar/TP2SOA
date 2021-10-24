@@ -11,7 +11,7 @@ import com.example.sacudeycome.data.LoginRepository;
  * ViewModel provider factory to instantiate LoginViewModel.
  * Required given LoginViewModel has a non-empty constructor
  */
-public class LoginViewModelFactory implements ViewModelProvider.Factory {
+public class RegisterViewModelFactory implements ViewModelProvider.Factory {
 
     @NonNull
     @Override

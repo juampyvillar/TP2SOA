@@ -13,41 +13,41 @@ import com.example.sacudeycome.R;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
+    private MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
+    private LoginRepository registerRepository;
 
     LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+        this.registerRepository = loginRepository;
     }
 
-    LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
+    LiveData<RegisterFormState> getRegisterFormState() {
+        return registerFormState;
     }
 
-    LiveData<LoginResult> getLoginResult() {
-        return loginResult;
+    LiveData<RegisterResult> getRegisterResult() {
+        return registerResult;
     }
 
-    public void login(String username, String password) {
+    public void register(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Result<LoggedInUser> result = registerRepository.login(username, password);
 
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+            registerResult.setValue(new RegisterResult(new RegistedInUserView(data.getDisplayName())));
         } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
+            registerResult.setValue(new RegisterResult(R.string.login_failed));
         }
     }
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+            registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+            registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password));
         } else {
-            loginFormState.setValue(new LoginFormState(true));
+            registerFormState.setValue(new RegisterFormState(true));
         }
     }
 
