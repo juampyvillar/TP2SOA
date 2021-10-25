@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.sacudeycome.R;
 import com.example.sacudeycome.RegisterActivity;
+import com.example.sacudeycome.SelectorActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -123,6 +124,9 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                Intent pasarActivity = new Intent(LoginActivity.this, SelectorActivity.class);
+                Log.d("ENTRO","Bien2");
+                startActivity(pasarActivity);
             }
         });
 

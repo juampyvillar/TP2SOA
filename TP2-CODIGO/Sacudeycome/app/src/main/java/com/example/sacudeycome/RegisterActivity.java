@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sacudeycome.ui.login.LoginActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
                 try {
                     Log.d("Pasa por acaa boton registro","Biennnnn2");
-                    obj.put("env","TEST");
+                    obj.put("env","PROD");
                     obj.put("name",editNombre.getText().toString());
                     obj.put("lastname",editApellido.getText().toString());
                     obj.put("dni",Long.parseLong(editDni.getText().toString()));
@@ -79,6 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
                     i.putExtra("datosJson", obj.toString());
                     startService(i);
                     Log.d("Pasa por acaa boton registro",obj.toString());
+                    Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+                    Log.d("ENTRO","Bien2");
+                    startActivity(pasarActivity);
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
