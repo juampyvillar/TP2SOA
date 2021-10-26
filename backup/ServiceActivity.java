@@ -19,8 +19,6 @@ public class ServiceActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ShakeService.class);
         //Start Service
         startService(intent);
-
         tvShakeService = findViewById(R.id.tvShakeService);
-
     }
 }

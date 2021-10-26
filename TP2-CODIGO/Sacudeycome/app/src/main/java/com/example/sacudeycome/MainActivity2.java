@@ -32,8 +32,8 @@ public class MainActivity2 extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity2.this,ServiceActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity2.this,ServiceActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -44,7 +44,7 @@ public class MainActivity2 extends AppCompatActivity {
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
-            public void onShake(int count) {
+            public void onShake(int count,boolean right) {
                 tvShake.setText("Shake Action is just detected!!");
                 Toast.makeText(MainActivity2.this, "Shaked!!!", Toast.LENGTH_SHORT).show();
             }

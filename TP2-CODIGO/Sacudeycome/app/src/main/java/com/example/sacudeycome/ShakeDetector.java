@@ -1,13 +1,10 @@
 package com.example.sacudeycome;
 
-import static com.example.sacudeycome.ShakeActivity.Round;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.widget.Toast;
 
 public class ShakeDetector implements SensorEventListener {
 
@@ -19,19 +16,20 @@ public class ShakeDetector implements SensorEventListener {
      *  many G's it takes to register a shake
      */
     private static final float SHAKE_THRESHOLD_GRAVITY = 2.7F;
-    private static final int SHAKE_SLOP_TIME_MS = 500;
+    private static final int SHAKE_SLOP_TIME_MS = 0;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
 
     private OnShakeListener mListener;
     private long mShakeTimestamp;
     private int mShakeCount;
+    public boolean right;
 
     public void setOnShakeListener(OnShakeListener listener) {
         this.mListener = listener;
     }
 
     public interface OnShakeListener {
-        public void onShake(int count);
+        public void onShake(int count, boolean right);
     }
 
     @Override
@@ -46,8 +44,6 @@ public class ShakeDetector implements SensorEventListener {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-
-
 
 
             Float gX = x / SensorManager.GRAVITY_EARTH;
@@ -66,11 +62,12 @@ public class ShakeDetector implements SensorEventListener {
                 }
 
                 if(Round(x,4)>10.0000){
-                    Log.d("SENSOR DERECHA", "X Right axis: " + x);
+                    Log.d("SENSOR IZQUIERDA", "X Right axis: " + x);
+                    right = false;
                 }
                 else if(Round(x,4)<-10.0000){
-                    Log.d("SENSOR IZQUIERDA", "X Left axis: " + x);
-                    //Toast.makeText(ShakeActivity.this, "Left shake detected", Toast.LENGTH_SHORT).show();
+                    Log.d("SENSOR DERECHA", "X Left axis: " + x);
+                    right = true;
                 }
 
                 // reset the shake count after 3 seconds of no shakes
@@ -82,8 +79,14 @@ public class ShakeDetector implements SensorEventListener {
                 mShakeCount++;
 
                 Log.d("VISUALIZARVALOR SHAKE X", gX.toString());
-                mListener.onShake(mShakeCount);
+                mListener.onShake(mShakeCount,right);
             }
         }
+    }
+    public static float Round(float Rval, int Rpl) {
+        float p = (float)Math.pow(10,Rpl);
+        Rval = Rval * p;
+        float tmp = Math.round(Rval);
+        return (float)tmp/p;
     }
 }

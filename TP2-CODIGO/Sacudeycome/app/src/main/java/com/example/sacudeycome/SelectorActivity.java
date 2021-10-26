@@ -29,11 +29,10 @@ public class SelectorActivity extends AppCompatActivity {
     private TextView precio;
     private ImageView imagen;
 
-
+    private int idMenu = 0;
     private SensorManager mSensorManager;
-    private float mAccel;
-    private float mAccelCurrent;
-    private float mAccelLast;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +45,29 @@ public class SelectorActivity extends AppCompatActivity {
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
         imagen = findViewById(R.id.imagen);
-        cargarMenu(0);
+        cargarMenu(idMenu);
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count,boolean right) {
+                Log.d("LLego aca?", "HIZO SHAKE!");
+                if(idMenu>=0 && right)
+                        idMenu++;
+                if(idMenu<=8 && !right)
+                        idMenu--;
+                cargarMenu(idMenu);
+                Log.d("LLego aca?", "HIZO SHAKE!");
+                Toast.makeText(SelectorActivity.this, "Shaked!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void cargarMenu (int nunMenu){
-        Log.d("LLega aca?","LLEGA ACA!");
+        Log.d("LLega aca?","LLEGA ACA!     "+nunMenu);
 
         String[] campos=listaMenus.get(nunMenu);
         titulo.setText(campos[0]);
@@ -132,10 +148,19 @@ public class SelectorActivity extends AppCompatActivity {
                 }
             }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
 
-
-
-
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
+    }
 }
 
 //Titulo-Precio-Descripcion-IdImagen

@@ -23,12 +23,9 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
     </intent-filter></activity>
-        <activity
+        <!--<activity
             android:name=".ServiceActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Shake_test"
-            android:exported="false" />
+            android:exported="false" />-->
         <activity android:name=".SelectorActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ui.login.LoginActivity"/>
@@ -37,7 +34,7 @@
         <activity android:name=".MainActivity" />
 
         <service android:name=".ServicesHttp_POST" />
-        <service android:name=".ShakeService" />
+        <!--<service android:name=".ShakeService" /> -->
     </application>
 
 </manifest>
