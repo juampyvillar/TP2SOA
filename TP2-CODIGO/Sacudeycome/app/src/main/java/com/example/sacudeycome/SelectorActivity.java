@@ -1,27 +1,19 @@
 package com.example.sacudeycome;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SelectorActivity extends AppCompatActivity {
 
-    private static String menuPath = "Menu.txt";
     private ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
     private TextView titulo;
@@ -38,8 +30,6 @@ public class SelectorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selector);
-        Log.d("Estoy en el archivo buscando","Sigo buscando");
-//        leerArchivo();
         cargarLista();
         titulo = findViewById(R.id.titulo);
         descripcion = findViewById(R.id.desc);
@@ -54,30 +44,27 @@ public class SelectorActivity extends AppCompatActivity {
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake(int count,boolean right) {
-                Log.d("LLego aca?", "HIZO SHAKE!");
-                if(idMenu>=0 && right)
+                if(idMenu>=0 && idMenu<8 && right)
                         idMenu++;
-                if(idMenu<=8 && !right)
+                if(idMenu<=8 && idMenu>0&& !right)
                         idMenu--;
                 cargarMenu(idMenu);
-                Log.d("LLego aca?", "HIZO SHAKE!");
-                Toast.makeText(SelectorActivity.this, "Shaked!!!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void cargarMenu (int nunMenu){
-        Log.d("LLega aca?","LLEGA ACA!     "+nunMenu);
-
-        String[] campos=listaMenus.get(nunMenu);
+    public void cargarMenu (int numMenu){
+        Log.d("ID MENU","     "+numMenu);
+        String[] campos=listaMenus.get(numMenu);
         titulo.setText(campos[0]);
         descripcion.setText(campos[2]);
         precio.setText(campos[1]);
 
-//        switch (nunMenu) {
-//            case 0:
+        switch (numMenu) {
+            case 0:
 //                imagen.setImageResource(R.drawable.muzzarella);
-//                break;
+//                imagen.setBackground(ContextCompat.getDrawable(this, R.drawable.muzzarella));
+                break;
 //            case 1:
 //                imagen.setImageResource(R.drawable.huevo);
 //                break;
@@ -102,8 +89,7 @@ public class SelectorActivity extends AppCompatActivity {
 //            case 8:
 //                imagen.setImageResource(R.drawable.roquefort);
 //                break;
-//        }
-//        imagen.setImageURI(Uri.parse(menuPath+"/"+campos[3]));
+        }
     }
 
 
@@ -119,35 +105,6 @@ public class SelectorActivity extends AppCompatActivity {
         listaMenus.add(("Roquefort-610-Salsa de tomate, muzzarella, roquefort, oregano, aceitunas").split("-"));
     }
 
-    public void leerArchivo (){
-            File archivo = null;
-            FileReader fr = null;
-            BufferedReader br = null;
-
-            try {
-                archivo = new File("Menu.txt");
-                fr = new FileReader(archivo);
-                br = new BufferedReader(fr);
-
-                String linea;
-                while ((linea = br.readLine()) != null){
-                    Log.d("Linea: ", linea);
-                    String[] campos = linea.split("-");
-                    Log.d("Linea: ", campos[0]);
-                    listaMenus.add(campos);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (null != fr) {
-                        fr.close();
-                    }
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            }
-    }
     @Override
     public void onResume() {
         super.onResume();

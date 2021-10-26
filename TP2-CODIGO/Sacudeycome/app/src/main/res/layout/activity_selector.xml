@@ -8,44 +8,14 @@
 
     <TextView
         android:id="@+id/titulo"
-        android:layout_width="336dp"
-        android:layout_height="36dp"
+        android:layout_width="329dp"
+        android:layout_height="68dp"
         android:layout_marginTop="16dp"
         android:text="Titulo de la comida"
+        android:textAlignment="center"
+        android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/Pesos"
-        android:layout_width="10dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="420dp"
-        android:text="$"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.371"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/desc"
-        android:layout_width="335dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="288dp"
-        android:text="Descripcion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/precio"
-        android:layout_width="69dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="420dp"
-        android:text="0000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,12 +23,48 @@
         android:id="@+id/imagen"
         android:layout_width="332dp"
         android:layout_height="214dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="84dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:srcCompat="@drawable/fugazzetta" />
+
+    <TextView
+        android:id="@+id/precio"
+        android:layout_width="116dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="396dp"
+        android:text="000"
+        android:textSize="48sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.576"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Pesos"
+        android:layout_width="27dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="396dp"
+        android:text="$"
+        android:textSize="48sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="335dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="316dp"
+        android:text="Descripcion"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
