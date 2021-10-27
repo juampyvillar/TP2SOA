@@ -4,16 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
+import android.content.Entity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SelectorActivity extends AppCompatActivity implements SensorEventListener{
@@ -40,7 +48,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         titulo = findViewById(R.id.titulo);
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
-        imagen = findViewById(R.id.imagen);
         cargarMenu(idMenu);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -65,12 +72,19 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         String[] campos=listaMenus.get(numMenu);
         titulo.setText(campos[0]);
         descripcion.setText(campos[2]);
-        precio.setText(campos[1]);
+        precio.setText("$"+campos[1]);
 
         switch (numMenu) {
             case 0:
 //                imagen.setImageResource(R.drawable.muzzarella);
 //                imagen.setBackground(ContextCompat.getDrawable(this, R.drawable.muzzarella));
+//                View convertView = LayoutInflater.from(this).inflate(R.layout.activity_selector, null);
+//                imagen = (ImageView) convertView.findViewById(R.id.imagen);
+//                imagen.setImageResource(R.drawable.muzzarella);
+
+                imagen=(ImageView)findViewById(R.id.imagen);
+                Drawable myDrawable = getResources().getDrawable(R.drawable.muzzarella);
+                imagen.setImageDrawable(myDrawable);
                 break;
 //            case 1:
 //                imagen.setImageResource(R.drawable.huevo);
@@ -146,6 +160,36 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-}
+
+       /* public static class Adaptador extends BaseAdapter {
+            private Context context;
+            private LayoutInflater inflater;
+
+            public Adaptador(Context context) {
+                this.context = context;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                //return listEntidad.get(position);
+            }
+
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // OBTENER EL OBJETO POR CADA ITEM A MOSTRAR
+                final Object entidad = (Object) getItem(position);
+
+                // CREAMOS E INICIALIZAMOS LOS ELEMENTOS DEL ITEM DE LA LISTA
+                convertView = LayoutInflater.from(context).inflate(R.layout.activity_selector, null);
+                ImageView imgFoto = (ImageView) convertView.findViewById(R.id.imagen);
+
+                // LLENAMOS LOS ELEMENTOS CON LOS VALORES DE CADA ITEM
+                imgFoto.setImageResource(R.drawable.fugazzetta);
+
+                return convertView;
+            }*/
+        }
+
 
 //Titulo-Precio-Descripcion-IdImagen

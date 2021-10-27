@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteX="34dp"
         tools:layout_editor_absoluteY="16dp" />
 
     <TextView
@@ -22,7 +22,8 @@
         android:layout_height="60dp"
         android:layout_marginTop="388dp"
         android:text="Nivel de Bateria: "
-        android:textSize="34sp"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

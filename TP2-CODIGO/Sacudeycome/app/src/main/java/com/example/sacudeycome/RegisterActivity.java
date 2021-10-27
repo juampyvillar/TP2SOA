@@ -48,8 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.Email);
         editPass = findViewById(R.id.password);
         buttonRegistrar = findViewById(R.id.register);
+        chequearConexionInternet();
         configurarBroadcastReceiver();
-
     }
 
     private void chequearConexionInternet() {
@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
                     token=datosJson.get("token").toString();
                     Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
-
+                    startActivity(pasarActivity);
 
                 }
                 else {
