@@ -86,30 +86,30 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 Drawable myDrawable = getResources().getDrawable(R.drawable.muzzarella);
                 imagen.setImageDrawable(myDrawable);
                 break;
-//            case 1:
-//                imagen.setImageResource(R.drawable.huevo);
-//                break;
-//            case 2:
-//                imagen.setImageResource(R.drawable.fugazzetta);
-//                break;
-//            case 3:
-//                imagen.setImageResource(R.drawable.fugazzetta_con_panceta);
-//                break;
-//            case 4:
-//                imagen.setImageResource(R.drawable.jamon);
-//                break;
-//            case 5:
-//                imagen.setImageResource(R.drawable.jamon_y_morrones);
-//                break;
-//            case 6:
-//                imagen.setImageResource(R.drawable.napolitana);
-//                break;
-//            case 7:
-//                imagen.setImageResource(R.drawable.calabresa);
-//                break;
-//            case 8:
-//                imagen.setImageResource(R.drawable.roquefort);
-//                break;
+            case 1:
+                imagen.setImageResource(R.drawable.huevo);
+                break;
+            case 2:
+                imagen.setImageResource(R.drawable.fugazzetta);
+                break;
+            case 3:
+                imagen.setImageResource(R.drawable.fugazzetta_con_panceta);
+                break;
+            case 4:
+                imagen.setImageResource(R.drawable.jamon);
+                break;
+            case 5:
+                imagen.setImageResource(R.drawable.jamon_y_morrones);
+                break;
+            case 6:
+                imagen.setImageResource(R.drawable.napolitana);
+                break;
+            case 7:
+                imagen.setImageResource(R.drawable.calabresa);
+                break;
+            case 8:
+                imagen.setImageResource(R.drawable.roquefort);
+                break;
         }
     }
 
