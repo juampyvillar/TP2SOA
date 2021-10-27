@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:text="Titulo de la comida"
         android:textAlignment="center"
-        android:textSize="35sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,18 +31,21 @@
         app:srcCompat="@drawable/ic_launcher_background"
     />
     <!--android:background="@drawable/muzzarella"-->
-<TextView
-    android:id="@+id/precio"
-    android:layout_width="83dp"
-    android:layout_height="60dp"
-    android:layout_marginTop="392dp"
-    android:text="$000"
-    android:textSize="34sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
 
-<TextView
+    <TextView
+        android:id="@+id/precio"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="392dp"
+        android:text="$000"
+        android:textAlignment="center"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
     android:id="@+id/desc"
     android:layout_width="337dp"
     android:layout_height="66dp"

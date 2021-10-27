@@ -2,6 +2,7 @@ package com.example.sacudeycome;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = "";
     private String tokenanterior = "";
-    private String activity2 = "Login / Registro / Activity2";
+    private String activity2 = "Login / Registro / Activity 2";
     private Toast toast;
     Intent batteryStatus;
 
@@ -49,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verificarBateria() {
-        batteryStatus= new Intent();
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = this.registerReceiver(null, ifilter);
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
         Float batteryPct = level * 100 / (float)scale;
         bateria.setText("Nivel de Bateria: " + batteryPct.intValue() + "%");
-
     }
 
     public void initQR() {
@@ -120,11 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (barcodes.size() > 0) {
 
-                    // obtenemos el token
                     token = barcodes.valueAt(0).displayValue.toString();
 
-                    // verificamos que el token anterior no se igual al actual
-                    // esto es util para evitar multiples llamadas empleando el mismo token
                     if (!token.equals(tokenanterior)) {
                         tokenanterior = token; // guardamos el ultimo token proceado
                         Intent pasarActivity = new Intent(MainActivity.this, LoginActivity.class);
