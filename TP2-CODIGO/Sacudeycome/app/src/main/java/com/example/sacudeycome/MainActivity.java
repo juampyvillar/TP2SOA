@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = "";
     private String tokenanterior = "";
-    private String activity2 = "Login / Registro / Activity2";
+    private String activity2 = "Login / Registro / Activity 2";
     private Toast toast;
     Intent batteryStatus;
 
