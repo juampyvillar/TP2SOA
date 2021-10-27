@@ -28,13 +28,13 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/fugazzetta" />
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
         android:id="@+id/precio"
         android:layout_width="116dp"
         android:layout_height="57dp"
-        android:layout_marginTop="396dp"
+        android:layout_marginTop="408dp"
         android:text="000"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,22 +46,22 @@
         android:id="@+id/Pesos"
         android:layout_width="27dp"
         android:layout_height="58dp"
-        android:layout_marginTop="396dp"
+        android:layout_marginTop="408dp"
         android:text="$"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintHorizontal_bias="0.338"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/desc"
-        android:layout_width="335dp"
-        android:layout_height="53dp"
+        android:layout_width="332dp"
+        android:layout_height="85dp"
         android:layout_marginTop="316dp"
         android:text="Descripcion"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

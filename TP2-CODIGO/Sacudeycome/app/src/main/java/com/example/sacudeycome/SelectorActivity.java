@@ -5,14 +5,18 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
-public class SelectorActivity extends AppCompatActivity {
+public class SelectorActivity extends AppCompatActivity implements SensorEventListener{
 
     private ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
@@ -25,6 +29,8 @@ public class SelectorActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
+    private Sensor mProximity;
+    private static final int SENSOR_SENSITIVITY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class SelectorActivity extends AppCompatActivity {
         cargarMenu(idMenu);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
@@ -110,13 +117,34 @@ public class SelectorActivity extends AppCompatActivity {
         super.onResume();
         // Add the following line to register the Session Manager Listener onResume
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener( this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void onPause() {
         // Add the following line to unregister the Sensor Manager onPause
-        mSensorManager.unregisterListener(mShakeDetector);
         super.onPause();
+        mSensorManager.unregisterListener(mShakeDetector);
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
+                //near
+                Toast.makeText(getApplicationContext(), "near", Toast.LENGTH_SHORT).show();
+            }
+//            else {
+//                far
+//                Toast.makeText(getApplicationContext(), "far", Toast.LENGTH_SHORT).show();
+//            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
 

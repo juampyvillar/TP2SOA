@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
                 try {
                     Log.d("Pasa por acaa boton registro","Biennnnn2");
-                    obj.put("env","PROD");
+                    obj.put("env","TEST");
                     obj.put("name",editNombre.getText().toString());
                     obj.put("lastname",editApellido.getText().toString());
                     obj.put("dni",Long.parseLong(editDni.getText().toString()));
@@ -73,17 +73,10 @@ public class RegisterActivity extends AppCompatActivity {
                     obj.put("commission",COMISION);
                     obj.put("group",GRUPO);
 
-                    Log.d("Pasa por acaa boton registro","Biennnnn3");
                     Intent i = new Intent(RegisterActivity.this, ServicesHttp_POST.class);
-                    Log.d("Pasa por acaa boton registro","Biennnnn5");
                     i.putExtra("uri", URI_REGISTER);
-                    Log.d("Pasa por acaa boton registro","Biennnnn6");
                     i.putExtra("datosJson", obj.toString());
                     startService(i);
-                    Log.d("Pasa por acaa boton registro",obj.toString());
-                    Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
-                    Log.d("ENTRO","Bien2");
-                    startActivity(pasarActivity);
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -91,19 +84,23 @@ public class RegisterActivity extends AppCompatActivity {
     };
 
     private void configurarBroadcastReceiver(){
-        filtro = new IntentFilter("com.example.intentservice.internet.action.RESPUESTA_OPERACION");
+        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
         filtro.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver,filtro);
     }
 
     public class ReceptorOperacion extends BroadcastReceiver{
+
+        @Override
         public void onReceive(Context context, Intent intent){
             try{
-                Log.d("Pasa por acaa","Biennnnn1");
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
+                Log.i("datos:   ",datosJson.get("success").toString());
                 Log.i("Loggeo Main","Datos Json Main Thread: "+datosJsonString);
                 Toast.makeText(getApplicationContext(), "Se recibio respuesta del server", Toast.LENGTH_SHORT).show();
+                Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+                startActivity(pasarActivity);
             }catch(JSONException e){
                 e.printStackTrace();
             }
