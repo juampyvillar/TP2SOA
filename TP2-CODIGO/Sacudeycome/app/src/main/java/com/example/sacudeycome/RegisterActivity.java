@@ -6,15 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SearchRecentSuggestionsProvider;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.sacudeycome.ui.login.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,23 @@ public class RegisterActivity extends AppCompatActivity {
         editDni = findViewById(R.id.DNI);
         editEmail = findViewById(R.id.Email);
         editPass = findViewById(R.id.password);
-
         buttonRegistrar = findViewById(R.id.register);
-        buttonRegistrar.setEnabled(true);
-        buttonRegistrar.setOnClickListener(HandlerCmdRegistrar);
-
         configurarBroadcastReceiver();
+
+    }
+
+    private void chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            Toast.makeText(getApplicationContext(), "Hay Conexion a Internet ", Toast.LENGTH_SHORT).show();
+            buttonRegistrar.setEnabled(true);
+            buttonRegistrar.setOnClickListener(HandlerCmdRegistrar);
+        }else{
+            Toast.makeText(getApplicationContext(), "No hay conexion a Internet ", Toast.LENGTH_SHORT).show();
+            buttonRegistrar.setEnabled(false);
+        }
+
     }
 
     private View.OnClickListener HandlerCmdRegistrar = new View.OnClickListener()
@@ -96,11 +107,17 @@ public class RegisterActivity extends AppCompatActivity {
             try{
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("datos:   ",datosJson.get("success").toString());
-                Log.i("Loggeo Main","Datos Json Main Thread: "+datosJsonString);
-                Toast.makeText(getApplicationContext(), "Se recibio respuesta del server", Toast.LENGTH_SHORT).show();
-                Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
-                startActivity(pasarActivity);
+                if(datosJson.get("success").toString().equals("true")){
+                    token=datosJson.get("token").toString();
+                    Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Registro incorrecto", Toast.LENGTH_SHORT).show();
+                }
+
             }catch(JSONException e){
                 e.printStackTrace();
             }

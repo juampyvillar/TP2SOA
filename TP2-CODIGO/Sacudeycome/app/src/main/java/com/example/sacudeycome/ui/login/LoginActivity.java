@@ -123,8 +123,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ENTRO LOGIN","Bien1");
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                //loginViewModel.login(usernameEditText.getText().toString(),
-                  //      passwordEditText.getText().toString());
+                loginViewModel.login(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString());
                 Intent pasarActivity = new Intent(LoginActivity.this, SelectorActivity.class);
                 Log.d("ENTRO LOGIN2","Bien2");
                 startActivity(pasarActivity);

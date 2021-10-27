@@ -1,11 +1,8 @@
 package com.example.sacudeycome;
 
-import android.Manifest;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-
-import com.example.sacudeycome.ui.login.LoginActivity;
 
 import org.json.JSONObject;
 

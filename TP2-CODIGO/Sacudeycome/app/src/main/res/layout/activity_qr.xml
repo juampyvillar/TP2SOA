@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    tools:context=".SelectorActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="8dp">
+    <SurfaceView
+        android:id="@+id/camera_view"
+        android:layout_width="343dp"
+        android:layout_height="314dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="16dp" />
 
-        <SurfaceView
-            android:id="@+id/camera_view"
-            android:layout_width="337dp"
-            android:layout_height="337dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/Bateria"
+        android:layout_width="365dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="388dp"
+        android:text="Nivel de Bateria: "
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

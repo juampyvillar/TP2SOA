@@ -3,12 +3,14 @@ package com.example.sacudeycome;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
     private CameraSource cameraSource;
     private SurfaceView cameraView;
+    private TextView bateria;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = "";
     private String tokenanterior = "";
     private String activity2 = "Login / Registro / Activity2";
     private Toast toast;
+    Intent batteryStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr);
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
+        bateria = findViewById(R.id.Bateria);
         initQR();
+        verificarBateria();
+
+    }
+
+    private void verificarBateria() {
+        batteryStatus= new Intent();
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        Float batteryPct = level * 100 / (float)scale;
+        bateria.setText("Nivel de Bateria: " + batteryPct.intValue() + "%");
+
     }
 
     public void initQR() {
