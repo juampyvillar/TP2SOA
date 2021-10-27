@@ -74,42 +74,45 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         titulo.setText(campos[0]);
         descripcion.setText(campos[2]);
         precio.setText("$"+campos[1]);
+        imagen=(ImageView)findViewById(R.id.imagen);
+        Drawable myDrawable;
 
-        switch (numMenu) {
+                switch (numMenu) {
             case 0:
-//                imagen.setImageResource(R.drawable.muzzarella);
-//                imagen.setBackground(ContextCompat.getDrawable(this, R.drawable.muzzarella));
-//                View convertView = LayoutInflater.from(this).inflate(R.layout.activity_selector, null);
-//                imagen = (ImageView) convertView.findViewById(R.id.imagen);
-//                imagen.setImageResource(R.drawable.muzzarella);
-
-                imagen=(ImageView)findViewById(R.id.imagen);
-                Drawable myDrawable = getResources().getDrawable(R.drawable.muzzarella);
+                myDrawable = getResources().getDrawable(R.drawable.muzzarella);
                 imagen.setImageDrawable(myDrawable);
                 break;
             case 1:
-                imagen.setImageResource(R.drawable.huevo);
+                myDrawable = getResources().getDrawable(R.drawable.huevo);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 2:
-                imagen.setImageResource(R.drawable.fugazzetta);
+                myDrawable = getResources().getDrawable(R.drawable.fugazzetta);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 3:
-                imagen.setImageResource(R.drawable.fugazzetta_con_panceta);
+                myDrawable = getResources().getDrawable(R.drawable.fugazzetta_con_panceta);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 4:
-                imagen.setImageResource(R.drawable.jamon);
+                myDrawable = getResources().getDrawable(R.drawable.jamon);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 5:
-                imagen.setImageResource(R.drawable.jamon_y_morrones);
+                myDrawable = getResources().getDrawable(R.drawable.jamon_y_morrones);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 6:
-                imagen.setImageResource(R.drawable.napolitana);
+                myDrawable = getResources().getDrawable(R.drawable.napolitana);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 7:
-                imagen.setImageResource(R.drawable.calabresa);
+                myDrawable = getResources().getDrawable(R.drawable.calabresa);
+                imagen.setImageDrawable(myDrawable);
                 break;
             case 8:
-                imagen.setImageResource(R.drawable.roquefort);
+                myDrawable = getResources().getDrawable(R.drawable.roquefort);
+                imagen.setImageDrawable(myDrawable);
                 break;
         }
     }
