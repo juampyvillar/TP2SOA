@@ -1,38 +1,41 @@
 package com.example.sacudeycome;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Entity;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class SelectorActivity extends AppCompatActivity implements SensorEventListener{
 
-    private ArrayList<String[]> listaMenus = new ArrayList<String[]>();
+    private final ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
     private TextView titulo;
     private TextView descripcion;
     private TextView precio;
-    private ImageView imagen;
+
+    private ArrayList<String> destinos = new ArrayList<String>();
 
     private int idMenu = 0;
     private SensorManager mSensorManager;
@@ -68,16 +71,17 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         });
     }
 
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     public void cargarMenu (int numMenu){
         Log.d("ID MENU","     "+numMenu);
         String[] campos=listaMenus.get(numMenu);
         titulo.setText(campos[0]);
         descripcion.setText(campos[2]);
         precio.setText("$"+campos[1]);
-        imagen=(ImageView)findViewById(R.id.imagen);
+        ImageView imagen = (ImageView) findViewById(R.id.imagen);
         Drawable myDrawable;
 
-                switch (numMenu) {
+        switch (numMenu) {
             case 0:
                 myDrawable = getResources().getDrawable(R.drawable.muzzarella);
                 imagen.setImageDrawable(myDrawable);
@@ -152,7 +156,15 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
                 //near
                 Toast.makeText(getApplicationContext(), "near", Toast.LENGTH_SHORT).show();
-                sendEmail();
+                destinos.add("ezezella@gmail.com");
+                destinos.add("jjuampy11@gmail.com");
+                destinos.add("francogd@hotmail.es");
+                GMail mail = new GMail("sacudeycome@hotmail.com","sacudeycome123",destinos, "Pedido", "Pedido confirmado, alta pizza");
+                try {
+                    mail.sendEmail();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
 //            else {
 //                far
@@ -160,64 +172,66 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 //            }
         }
     }
-        protected void sendEmail() {
-        Log.i("Send email", "");
 
-        String[] TO = {"jjuampy11@gmail.com"};
-        String[] CC = {"juanpablo.villar11@gmail.com"};
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-
-
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-        emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Pedido exitoso");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Su pedido ha sido registrado");
-
-        try {
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            finish();
-            Log.i("Finished sending email...", "");
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(SelectorActivity.this,
-                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
-        }
-    }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
-       /* public static class Adaptador extends BaseAdapter {
-            private Context context;
-            private LayoutInflater inflater;
-
-            public Adaptador(Context context) {
-                this.context = context;
-            }
-
-            @Override
-            public Object getItem(int position) {
-                //return listEntidad.get(position);
-            }
-
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                // OBTENER EL OBJETO POR CADA ITEM A MOSTRAR
-                final Object entidad = (Object) getItem(position);
-
-                // CREAMOS E INICIALIZAMOS LOS ELEMENTOS DEL ITEM DE LA LISTA
-                convertView = LayoutInflater.from(context).inflate(R.layout.activity_selector, null);
-                ImageView imgFoto = (ImageView) convertView.findViewById(R.id.imagen);
-
-                // LLENAMOS LOS ELEMENTOS CON LOS VALORES DE CADA ITEM
-                imgFoto.setImageResource(R.drawable.fugazzetta);
-
-                return convertView;
-            }*/
+    public class GMail {
+        final String emailPort = "587";// gmail's smtp port
+        final String smtpAuth = "true";
+        final String starttls = "true";
+        final String emailHost = "smtp.gmail.com";
+        String fromEmail;
+        String fromPassword;
+        ArrayList<String> toEmailList;
+        String emailSubject;
+        String emailBody;
+        Properties emailProperties;
+        Session mailSession;
+        MimeMessage emailMessage;
+        public GMail() {
         }
+        public GMail(String fromEmail, String fromPassword, ArrayList toEmailList, String emailSubject, String emailBody) {
+            this.fromEmail = fromEmail;
+            this.fromPassword = fromPassword;
+            this.toEmailList = toEmailList;
+            this.emailSubject = emailSubject;
+            this.emailBody = emailBody;
+            emailProperties = System.getProperties();
+            emailProperties.put("mail.smtp.port", emailPort);
+            emailProperties.put("mail.smtp.auth", smtpAuth);
+            emailProperties.put("mail.smtp.starttls.enable", starttls);
+            Log.i("GMail", "Mail server properties set.");
+        }
+        public MimeMessage createEmailMessage() throws AddressException,
+                MessagingException, UnsupportedEncodingException {
+            mailSession = Session.getDefaultInstance(emailProperties, null);
+            emailMessage = new MimeMessage(mailSession);
+            emailMessage.setFrom(new InternetAddress(fromEmail, fromEmail));
+            for (String toEmail : toEmailList) {
+                Log.i("GMail","toEmail: "+toEmail);
+                emailMessage.addRecipient(Message.RecipientType.TO,
+                        new InternetAddress(toEmail));
+            }
+            emailMessage.setSubject(emailSubject);
+            emailMessage.setContent(emailBody, "text/html");// for a html email
+            // emailMessage.setText(emailBody);// for a text email
+            Log.i("GMail", "Email Message created.");
+            return emailMessage;
+        }
+        public void sendEmail() throws AddressException, MessagingException {
+            Transport transport = mailSession.getTransport("smtp");
+            transport.connect(emailHost, fromEmail, fromPassword);
+            Log.i("GMail","allrecipients: "+emailMessage.getAllRecipients());
+            transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+            transport.close();
+            Log.i("GMail", "Email sent successfully.");
+        }
+    }
+
+}
 
 
 //Titulo-Precio-Descripcion-IdImagen
