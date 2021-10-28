@@ -3,12 +3,15 @@ package com.example.sacudeycome;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -159,12 +162,9 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 destinos.add("ezezella@gmail.com");
                 destinos.add("jjuampy11@gmail.com");
                 destinos.add("francogd@hotmail.es");
-                GMail mail = new GMail("sacudeycome@hotmail.com","sacudeycome123",destinos, "Pedido", "Pedido confirmado, alta pizza");
-                try {
-                    mail.sendEmail();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
+                new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
+                        "sacudeycome123", destinos, "Pedido", "Pedido confirmado, alta pizza");
+//                new GMail("sacudeycome@hotmail.com","sacudeycome123",destinos, "Pedido", "Pedido confirmado, alta pizza");
             }
 //            else {
 //                far
@@ -178,60 +178,56 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     }
 
-    public class GMail {
-        final String emailPort = "587";// gmail's smtp port
-        final String smtpAuth = "true";
-        final String starttls = "true";
-        final String emailHost = "smtp.gmail.com";
-        String fromEmail;
-        String fromPassword;
-        ArrayList<String> toEmailList;
-        String emailSubject;
-        String emailBody;
-        Properties emailProperties;
-        Session mailSession;
-        MimeMessage emailMessage;
-        public GMail() {
-        }
-        public GMail(String fromEmail, String fromPassword, ArrayList toEmailList, String emailSubject, String emailBody) {
-            this.fromEmail = fromEmail;
-            this.fromPassword = fromPassword;
-            this.toEmailList = toEmailList;
-            this.emailSubject = emailSubject;
-            this.emailBody = emailBody;
-            emailProperties = System.getProperties();
-            emailProperties.put("mail.smtp.port", emailPort);
-            emailProperties.put("mail.smtp.auth", smtpAuth);
-            emailProperties.put("mail.smtp.starttls.enable", starttls);
-            Log.i("GMail", "Mail server properties set.");
-        }
-        public MimeMessage createEmailMessage() throws AddressException,
-                MessagingException, UnsupportedEncodingException {
-            mailSession = Session.getDefaultInstance(emailProperties, null);
-            emailMessage = new MimeMessage(mailSession);
-            emailMessage.setFrom(new InternetAddress(fromEmail, fromEmail));
-            for (String toEmail : toEmailList) {
-                Log.i("GMail","toEmail: "+toEmail);
-                emailMessage.addRecipient(Message.RecipientType.TO,
-                        new InternetAddress(toEmail));
-            }
-            emailMessage.setSubject(emailSubject);
-            emailMessage.setContent(emailBody, "text/html");// for a html email
-            // emailMessage.setText(emailBody);// for a text email
-            Log.i("GMail", "Email Message created.");
-            return emailMessage;
-        }
-        public void sendEmail() throws AddressException, MessagingException {
-            Transport transport = mailSession.getTransport("smtp");
-            transport.connect(emailHost, fromEmail, fromPassword);
-            Log.i("GMail","allrecipients: "+emailMessage.getAllRecipients());
-            transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
-            transport.close();
-            Log.i("GMail", "Email sent successfully.");
-        }
-    }
+    public class SendMailTask extends AsyncTask {
 
-}
+        private ProgressDialog statusDialog;
+        private Activity sendMailActivity;
+
+        public SendMailTask(Activity activity) {
+            sendMailActivity = activity;
+
+        }
+
+        protected void onPreExecute() {
+            statusDialog = new ProgressDialog(sendMailActivity);
+            statusDialog.setMessage("Getting ready...");
+            statusDialog.setIndeterminate(false);
+            statusDialog.setCancelable(false);
+            statusDialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object... args) {
+            try {
+                Log.i("SendMailTask", "About to instantiate GMail...");
+                publishProgress("Processing input....");
+                GMail androidEmail = new GMail(args[0].toString(),
+                        args[1].toString(), (ArrayList) args[2], args[3].toString(),
+                        args[4].toString());
+                publishProgress("Preparing mail message....");
+                androidEmail.createEmailMessage();
+                publishProgress("Sending email....");
+                androidEmail.sendEmail();
+                publishProgress("Email Sent.");
+                Log.i("SendMailTask", "Mail Sent.");
+            } catch (Exception e) {
+                publishProgress(e.getMessage());
+                Log.e("SendMailTask", e.getMessage(), e);
+            }
+            return null;
+        }
+
+        @Override
+        public void onProgressUpdate(Object... values) {
+            statusDialog.setMessage(values[0].toString());
+
+        }
+
+        @Override
+        public void onPostExecute(Object result) {
+            statusDialog.dismiss();
+        }
+}}
 
 
 //Titulo-Precio-Descripcion-IdImagen
