@@ -46,6 +46,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     private ShakeDetector mShakeDetector;
     private Sensor mProximity;
     private static final int SENSOR_SENSITIVITY = 4;
+    private String cuerpoMensaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,13 +159,19 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
                 //near
-                Toast.makeText(getApplicationContext(), "near", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Pedido Seleccionado", Toast.LENGTH_SHORT).show();
                 destinos.add("ezezella@gmail.com");
                 destinos.add("jjuampy11@gmail.com");
                 destinos.add("francogd@hotmail.es");
+                cuerpoMensaje="<h2><u><font COLOR='red'>Detalle del pedido: </font></u></h2> <BR>"
+                               + "<b>Menú:</b> " + "Pizza de " + titulo.getText() +"<BR>"
+                               + "<b>Descripción:</b> " + descripcion.getText() + "<BR>"
+                               + "<b>Precio:</b> " + precio.getText()  + "<BR>"
+                               + "<img src='https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2018/10/02222032/Patada-Pinola-independiente.jpg' width='200'> <BR><BR>"
+                               + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
-                        "sacudeycome123", destinos, "Pedido", "Pedido confirmado, alta pizza");
-//                new GMail("sacudeycome@hotmail.com","sacudeycome123",destinos, "Pedido", "Pedido confirmado, alta pizza");
+                        "sacudeycome123", destinos, "Colo lloron, no fue penal el de pinola",cuerpoMensaje);
+//                "Pedido confirmado... alta pizza"
             }
 //            else {
 //                far

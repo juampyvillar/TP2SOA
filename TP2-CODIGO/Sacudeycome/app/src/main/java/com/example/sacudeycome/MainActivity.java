@@ -128,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
                         Intent pasarActivity = new Intent(MainActivity.this, LoginActivity.class);
                         Log.d("Escaneado",token);
                         if(token.equals(activity2)){
+                            Log.d("ENTRO","Bien");
                             startActivity(pasarActivity);
-                        Log.d("ENTRO","Bien");}
+
+                        }
                         else
                         {
 //                            Context context = getApplicationContext();

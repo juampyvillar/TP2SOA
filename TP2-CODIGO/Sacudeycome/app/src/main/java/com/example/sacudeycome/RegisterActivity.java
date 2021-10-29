@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sacudeycome.ui.login.LoginActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,12 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new ReceptorOperacion();
 
-    private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
     private static final String URI_REGISTER= "http://so-unlam.net.ar/api/api/register";
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
-    private String token;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
                 try {
                     Log.d("Pasa por acaa boton registro","Biennnnn2");
-                    obj.put("env","TEST");
+                    obj.put("env","PROD");
                     obj.put("name",editNombre.getText().toString());
                     obj.put("lastname",editApellido.getText().toString());
                     obj.put("dni",Long.parseLong(editDni.getText().toString()));
@@ -108,14 +109,21 @@ public class RegisterActivity extends AppCompatActivity {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 if(datosJson.get("success").toString().equals("true")){
+                    String token =  new String();
+                    String token_refresh =new String();
                     token=datosJson.get("token").toString();
-                    Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
-                    Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+                    token_refresh=datosJson.get("token_refresh").toString();
+                   // ParametrosGenerales objeto = ParametrosGenerales.getInstancia(token, token_refresh);
+                    Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
+                    Intent pasarActivity;
+                    pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+
+
                     startActivity(pasarActivity);
 
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Registro incorrecto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login/Registro incorrecto", Toast.LENGTH_SHORT).show();
                 }
 
             }catch(JSONException e){
