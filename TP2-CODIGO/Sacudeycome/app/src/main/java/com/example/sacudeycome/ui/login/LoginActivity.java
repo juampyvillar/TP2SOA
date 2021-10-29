@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -41,11 +42,14 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private com.example.sacudeycome.databinding.ActivityLoginBinding binding;
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
-    final EditText usernameEditText = binding.username;
-    final EditText passwordEditText = binding.password;
-    final Button loginButton = binding.login;
-    private Button registerButton = binding.Register;
-    final ProgressBar loadingProgressBar = binding.loading;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private Button registerButton;
+    private ProgressBar loadingProgressBar ;
+    public IntentFilter filtro;
+    private ReceptorOperacion receiver = new LoginActivity.ReceptorOperacion();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +60,14 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
-
+        usernameEditText = binding.username;
+        passwordEditText = binding.password;
+        loginButton = binding.login;
+        registerButton = binding.Register;
+        loadingProgressBar = binding.loading;
 
        registerButton.setEnabled(true);
-
+       configurarBroadcastReceiver();
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -132,6 +140,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("ENTRO LOGIN","Bien1");
                 loadingProgressBar.setVisibility(View.VISIBLE);
+                loginButton.setEnabled(false);
+                registerButton.setEnabled(false);
 //                loginViewModel.login(usernameEditText.getText().toString(),
 //                        passwordEditText.getText().toString());
                 JSONObject obj = new JSONObject();
@@ -171,6 +181,12 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
+    private void configurarBroadcastReceiver(){
+        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
+        filtro.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver,filtro);
+    }
+
     public class ReceptorOperacion extends BroadcastReceiver{
 
         @Override
@@ -178,6 +194,8 @@ public class LoginActivity extends AppCompatActivity {
             try{
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
+                Log.d("Resultado request: " , datosJson.get("success").toString());
+                loadingProgressBar.setVisibility(View.GONE);
                 if(datosJson.get("success").toString().equals("true")){
                     String token =  new String();
                     String token_refresh =new String();

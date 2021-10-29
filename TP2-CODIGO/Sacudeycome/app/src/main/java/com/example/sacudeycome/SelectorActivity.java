@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.sacudeycome.ui.login.LoginActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -170,8 +173,9 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                                + "<img src='https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2018/10/02222032/Patada-Pinola-independiente.jpg' width='200'> <BR><BR>"
                                + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
-                        "sacudeycome123", destinos, "Colo lloron, no fue penal el de pinola",cuerpoMensaje);
-//                "Pedido confirmado... alta pizza"
+                        "sacudeycome123", destinos, "Pedido confirmado... alta pizza",cuerpoMensaje);
+//
+
             }
 //            else {
 //                far
@@ -211,12 +215,14 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 GMail androidEmail = new GMail(args[0].toString(),
                         args[1].toString(), (ArrayList) args[2], args[3].toString(),
                         args[4].toString());
-                publishProgress("Preparing mail message....");
+                publishProgress("Preparando mensaje de Email....");
                 androidEmail.createEmailMessage();
-                publishProgress("Sending email....");
+                publishProgress("Enviando email....");
                 androidEmail.sendEmail();
-                publishProgress("Email Sent.");
-                Log.i("SendMailTask", "Mail Sent.");
+                publishProgress("Email Enviado.");
+                Log.i("SendMailTask", "Email Enviado.");
+                Intent volverLogin = new Intent(SelectorActivity.this, LoginActivity.class);
+                startActivity(volverLogin);
             } catch (Exception e) {
                 publishProgress(e.getMessage());
                 Log.e("SendMailTask", e.getMessage(), e);
