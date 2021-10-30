@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
+    //ParametrosGenerales objeto = ParametrosGenerales.getInstancia("token", "token_refresh");
 
 
     @Override
@@ -113,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                     String token_refresh =new String();
                     token=datosJson.get("token").toString();
                     token_refresh=datosJson.get("token_refresh").toString();
-           //         ParametrosGenerales objeto = ParametrosGenerales.getInstancia(token, token_refresh);
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity;
                     pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
