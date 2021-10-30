@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,6 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                     obj.put("group",GRUPO);
 
                     Intent i = new Intent(RegisterActivity.this, ServicesHttp_POST.class);
+                    i.putExtra("metodo","POST");
                     i.putExtra("uri", URI_REGISTER);
                     i.putExtra("datosJson", obj.toString());
                     startService(i);
@@ -116,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                     token_refresh=datosJson.get("token_refresh").toString();
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
-                    ((MiAplicacion) getApplication()).setTiempoTranscurridoRefresh(0); //Cero desde inicio de token refresh
+                    ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio
 
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity;

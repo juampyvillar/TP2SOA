@@ -68,6 +68,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
+
+
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
@@ -77,6 +79,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 if(idMenu<=8 && idMenu>0&& !right)
                         idMenu--;
                 cargarMenu(idMenu);
+                ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
             }
         });
     }
@@ -180,7 +183,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                                + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
                         "sacudeycome123", destinos, "Pedido confirmado... alta pizza",cuerpoMensaje);
-//
+                Log.d("tiempo", "Transcurrido: " + ((MiAplicacion) getApplication()).getTiempoInicio());
+
 
             }
 //            else {

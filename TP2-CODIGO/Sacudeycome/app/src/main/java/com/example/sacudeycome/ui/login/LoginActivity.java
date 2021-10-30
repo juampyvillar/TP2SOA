@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -155,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                     obj.put("password",passwordEditText.getText().toString());
 
                     Intent i = new Intent(LoginActivity.this, ServicesHttp_POST.class);
+                    i.putExtra("metodo","POST");
                     i.putExtra("uri", URI_LOGIN);
                     i.putExtra("datosJson", obj.toString());
                     startService(i);
@@ -222,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Seteo el token y token refresh
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
-                    ((MiAplicacion) getApplication()).setTiempoTranscurridoRefresh(0);//Cero desde token refresh
+                    ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime());//Cero desde token refresh
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
