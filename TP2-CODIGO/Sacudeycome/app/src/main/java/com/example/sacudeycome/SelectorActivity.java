@@ -60,7 +60,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
         cargarMenu(idMenu);
-
+        Log.d("Token",((MiAplicacion) getApplication()).getToken());
+        Log.d("Token Refresh",((MiAplicacion) getApplication()).getToken_refresh());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mAccelerometer = mSensorManager

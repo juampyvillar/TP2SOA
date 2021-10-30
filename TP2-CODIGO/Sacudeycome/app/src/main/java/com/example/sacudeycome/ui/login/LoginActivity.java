@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sacudeycome.MiAplicacion;
 import com.example.sacudeycome.R;
 import com.example.sacudeycome.RegisterActivity;
 import com.example.sacudeycome.SelectorActivity;
@@ -210,14 +211,16 @@ public class LoginActivity extends AppCompatActivity {
             try{
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.d("Resultado request: " , datosJson.get("success").toString());
+                Log.d("Resultadorequest:" ,"Request: " + datosJson.get("success").toString());
                 loadingProgressBar.setVisibility(View.GONE);
                 if(datosJson.get("success").toString().equals("true")){
                     String token =  new String();
                     String token_refresh =new String();
                     token=datosJson.get("token").toString();
                     token_refresh=datosJson.get("token_refresh").toString();
-                    // ParametrosGenerales objeto = ParametrosGenerales.getInstancia(token, token_refresh);
+                    //Seteo el token y token refresh
+                    ((MiAplicacion) getApplication()).setToken(token);
+                    ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
