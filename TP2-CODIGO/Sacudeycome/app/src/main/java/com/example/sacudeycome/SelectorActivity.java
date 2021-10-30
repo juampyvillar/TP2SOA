@@ -56,6 +56,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selector);
         cargarLista();
+        ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
         titulo = findViewById(R.id.titulo);
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
@@ -66,6 +67,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
@@ -127,6 +129,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 imagen.setImageDrawable(myDrawable);
                 break;
         }
+
     }
 
 
@@ -148,6 +151,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         // Add the following line to register the Session Manager Listener onResume
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener( this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
     }
 
     @Override
@@ -160,6 +164,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
                 //near
@@ -171,7 +176,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                                + "<b>Menú:</b> " + "Pizza de " + titulo.getText() +"<BR>"
                                + "<b>Descripción:</b> " + descripcion.getText() + "<BR>"
                                + "<b>Precio:</b> " + precio.getText()  + "<BR>"
-                               + "<img src='https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2018/10/02222032/Patada-Pinola-independiente.jpg' width='200'> <BR><BR>"
+                               + "<img src='https://image.freepik.com/foto-gratis/gente-comiendo-pizza-restaurante_23-2148172684.jpg' width='200'> <BR><BR>"
                                + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
                         "sacudeycome123", destinos, "Pedido confirmado... alta pizza",cuerpoMensaje);
@@ -183,6 +188,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 //                Toast.makeText(getApplicationContext(), "far", Toast.LENGTH_SHORT).show();
 //            }
         }
+        ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
     }
 
     @Override
@@ -211,6 +217,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         @Override
         protected Object doInBackground(Object... args) {
             try {
+                ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
                 Log.i("SendMailTask", "About to instantiate GMail...");
                 publishProgress("Processing input....");
                 GMail androidEmail = new GMail(args[0].toString(),
@@ -222,6 +229,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 androidEmail.sendEmail();
                 publishProgress("Email Enviado.");
                 Log.i("SendMailTask", "Email Enviado.");
+                ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
                 Intent volverLogin = new Intent(SelectorActivity.this, LoginActivity.class);
                 startActivity(volverLogin);
             } catch (Exception e) {

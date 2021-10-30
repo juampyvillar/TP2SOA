@@ -194,6 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(), "No hay conexion a Internet ", Toast.LENGTH_SHORT).show();
           //  loginButton.setEnabled(false);
+
         }
 
     }
@@ -221,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Seteo el token y token refresh
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
+                    ((MiAplicacion) getApplication()).setTiempoTranscurridoRefresh(0);//Cero desde token refresh
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);

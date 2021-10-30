@@ -116,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                     token_refresh=datosJson.get("token_refresh").toString();
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
+                    ((MiAplicacion) getApplication()).setTiempoTranscurridoRefresh(0); //Cero desde inicio de token refresh
 
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity;
