@@ -1,9 +1,15 @@
 package com.example.sacudeycome;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,11 +19,13 @@ import java.util.Timer;
 public class MiAplicacion extends Application {
     private String token;
     private String token_refresh;
-    protected static long topeMinutos=10;
+    protected static long topeMinutos=2;
     private double tiempoInicio;
 
     private double tiempoTranscurridoRefresh;
     private static final String URI_ACTUALIZAR = "http://so-unlam.net.ar/api/api/refresh";
+    public IntentFilter filtro;
+    private ReceptorOperacion receiver = new MiAplicacion.ReceptorOperacion();
 
 
     public String getToken() {
@@ -36,9 +44,18 @@ public class MiAplicacion extends Application {
         this.token_refresh = token_refresh;
     }
 
+    public double getTiempoInicio() {
+        return tiempoInicio;
+    }
+
+    public void setTiempoInicio(double tiempoInicio) {
+        this.tiempoInicio = tiempoInicio;
+    }
 
     public void actualizarToken_refresh(){
         //solicitud al servidor y actualizar token
+        chequearConexionInternet();
+        configurarBroadcastReceiver();
 
             Log.d("actualizartoken","Biennnnn2");
             Intent i = new Intent(MiAplicacion.this, ServicesHttp_POST.class);
@@ -49,30 +66,8 @@ public class MiAplicacion extends Application {
     }
 
 
-    public double getTiempoInicio() {
-        return tiempoInicio;
-    }
 
-    public void setTiempoInicio(double tiempoInicio) {
-        this.tiempoInicio = tiempoInicio;
-    }
 
-//    public void actualizarTiempoTranscurrido(){
-//        if(tiempoTranscurridoRefresh >= topeMinutos){
-//            actualizarToken_refresh();
-//            tiempoTranscurridoRefresh=0;
-//            return;
-//        }
-//        if(tiempoTranscurridoRefresh>=0) {
-//            long endTime = SystemClock.elapsedRealtime();
-//            long elapsedMilliSeconds = endTime - tiempoInicio;
-//            double elapsedSeconds = elapsedMilliSeconds / 1000.0;
-//            double elapsedMinutos = elapsedSeconds / 60.0;
-//            tiempoTranscurridoRefresh+=((SystemClock.elapsedRealtime()/60000)-tiempoTranscurridoRefresh);
-//            Log.d("tiempo:","MiAplicacion: " + SystemClock.elapsedRealtime());
-//            Log.d("tiempo:","MiAplicacion: tiempo transcurrido: " + tiempoTranscurridoRefresh);
-//
-//        }
 
         public void actualizarTiempoTranscurrido(){
 
@@ -86,7 +81,55 @@ public class MiAplicacion extends Application {
 
             }
             Log.d("tiempo:","MiAplicacion: " + tiempoInicio);
-           Log.d("tiempo:","MiAplicacion: tiempo transcurrido: " + elapsedMinutos);
+            Log.d("tiempo:","MiAplicacion: tiempo transcurrido: " + elapsedMinutos);
 
     }
+
+    private void chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            Log.d( "ChequeoInternet","Hay Conexion a Internet ");
+
+        }else{
+            Log.d( "ChequeoInternet","No hay Conexion a Internet ");
+        }
+
+    }
+    private void configurarBroadcastReceiver(){
+        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
+        filtro.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver,filtro);
+    }
+
+    public class ReceptorOperacion extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent){
+            try{
+                String datosJsonString = intent.getStringExtra("datosJson");
+                JSONObject datosJson = new JSONObject(datosJsonString);
+                Log.d("RespuestaServer","33333 " + datosJson.toString());
+                if(datosJson.get("success").toString().equals("true")){
+                    String token =  new String();
+                    String token_refresh =new String();
+                    token=datosJson.get("token").toString();
+                    token_refresh=datosJson.get("token_refresh").toString();
+                    setToken(token);
+                    setToken_refresh(token_refresh);
+                    setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio
+
+                    Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Login/Registro incorrecto", Toast.LENGTH_SHORT).show();
+                }
+
+            }catch(JSONException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

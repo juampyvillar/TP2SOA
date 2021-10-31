@@ -20,6 +20,7 @@ public class ServicesHttp_POST extends IntentService {
     private Exception exception=null;
     private HttpURLConnection httpConnection;
     private URL mUrl;
+    private String tipo;
 
     public ServicesHttp_POST() { super("ServicesHttp_Get");}
 
@@ -34,13 +35,15 @@ public class ServicesHttp_POST extends IntentService {
             Log.d("Pasa por acaa Handle ","Biennnnn1");
             String metodo = intent.getExtras().getString("metodo");
             String uri = intent.getExtras().getString("uri");
-            JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
+            tipo= intent.getExtras().getString("tipo");
+
             if(metodo.equals("POST")) {
+                JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
                 ejecutarPost(uri,datosJson);
             } else if(metodo.equals("PUT")) {
                 ejecutarPut(uri,new JSONObject());
             } else {
-                Log.d("Service","Metodo " + metodo +" no valido para el servidor");
+                Log.e("Service","Metodo " + metodo +" no valido para el servidor");
             }
         }catch(Exception e) {
             Log.e("Loggeo_Service","Error: "+e.toString());
@@ -65,10 +68,15 @@ public class ServicesHttp_POST extends IntentService {
             URL mUrl = new URL(uri);
             urlConnection = (HttpURLConnection) mUrl.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            if(tipo.equals("Evento")){
+                String token_refresh = ((MiAplicacion) getApplication()).getToken_refresh();
+                urlConnection.setRequestProperty("Authorization", "Bearer " + token_refresh +"; charset=UTF-8");
+            }
+
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
             urlConnection.setConnectTimeout(5000);
-            Log.i("Loggeo_Service","               33333333333"+datosJson.toString());
+            Log.i("Loggeo_Service","333333 " + datosJson.toString());
             urlConnection.setRequestMethod("POST");
             DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
             wr.write(datosJson.toString().getBytes(StandardCharsets.UTF_8));

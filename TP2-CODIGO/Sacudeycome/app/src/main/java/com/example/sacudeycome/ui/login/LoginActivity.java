@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private com.example.sacudeycome.databinding.ActivityLoginBinding binding;
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
+    private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
     private EditText usernameEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -150,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 //                loginViewModel.login(usernameEditText.getText().toString(),
 //                        passwordEditText.getText().toString());
                 JSONObject obj = new JSONObject();
+
                 try {
                     Log.d("Pasa por acaa boton registro","Biennnnn2");
                     obj.put("email",usernameEditText.getText().toString());
@@ -178,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = "Bienvenido/a " + usernameEditText.getText();
+        String welcome = "Bienvenido/a ";
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
@@ -226,6 +228,9 @@ public class LoginActivity extends AppCompatActivity {
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
                     ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime());//Cero desde token refresh
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
+
+                    registrarEventoEnServidor("Login Correcto", " El usuario "+ usernameEditText.getText() + "Se ha loggeado exitosamente",token);
+
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
                 }
@@ -234,6 +239,26 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             }catch(JSONException e){
+                e.printStackTrace();
+            }
+        }
+
+        public void registrarEventoEnServidor(String tipoEvento, String descripcion, String token){
+            JSONObject objEvento = new JSONObject();
+
+            try {
+                Log.d("Pasa por acaa boton registro","Biennnnn2");
+                objEvento.put("env","TEST");
+                objEvento.put("type_events",tipoEvento);
+                objEvento.put("description",descripcion);
+
+                Intent i = new Intent(LoginActivity.this, ServicesHttp_POST.class);
+                i.putExtra("metodo","POST");
+                i.putExtra("uri", URI_EVENTO);
+                i.putExtra("datosJson", objEvento.toString());
+                i.putExtra("tipo","evento");
+                startService(i);
+            }catch (JSONException e) {
                 e.printStackTrace();
             }
         }
