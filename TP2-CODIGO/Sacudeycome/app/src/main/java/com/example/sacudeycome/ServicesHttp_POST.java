@@ -20,7 +20,7 @@ public class ServicesHttp_POST extends IntentService {
     private Exception exception=null;
     private HttpURLConnection httpConnection;
     private URL mUrl;
-    private String tipo;
+    private String tipo="";
 
     public ServicesHttp_POST() { super("ServicesHttp_Get");}
 
@@ -69,8 +69,8 @@ public class ServicesHttp_POST extends IntentService {
             urlConnection = (HttpURLConnection) mUrl.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             if(tipo.equals("Evento")){
-                String token_refresh = ((MiAplicacion) getApplication()).getToken_refresh();
-                urlConnection.setRequestProperty("Authorization", "Bearer " + token_refresh +"; charset=UTF-8");
+                String token = ((MiAplicacion) getApplication()).getToken();
+                urlConnection.setRequestProperty("Authorization", "Bearer " + token +"; charset=UTF-8");
             }
 
             urlConnection.setDoOutput(true);

@@ -91,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                     i.putExtra("metodo","POST");
                     i.putExtra("uri", URI_REGISTER);
                     i.putExtra("datosJson", obj.toString());
+                    i.putExtra("tipo","registro");
                     startService(i);
                 }catch (JSONException e) {
                     e.printStackTrace();
@@ -116,6 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String token_refresh =new String();
                     token=datosJson.get("token").toString();
                     token_refresh=datosJson.get("token_refresh").toString();
+                    ((MiAplicacion) getApplication()).setUsuario(editEmail.getText().toString());
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
                     ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio

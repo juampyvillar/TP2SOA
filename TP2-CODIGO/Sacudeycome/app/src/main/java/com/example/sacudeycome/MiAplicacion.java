@@ -19,10 +19,10 @@ import java.util.Timer;
 public class MiAplicacion extends Application {
     private String token;
     private String token_refresh;
-    protected static long topeMinutos=2;
+    protected static long topeMinutos=1;
     private double tiempoInicio;
+    private String usuario;
 
-    private double tiempoTranscurridoRefresh;
     private static final String URI_ACTUALIZAR = "http://so-unlam.net.ar/api/api/refresh";
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new MiAplicacion.ReceptorOperacion();
@@ -100,6 +100,14 @@ public class MiAplicacion extends Application {
         filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
         filtro.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver,filtro);
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public class ReceptorOperacion extends BroadcastReceiver {

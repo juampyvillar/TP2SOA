@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -20,13 +22,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.ui.login.LoginActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -41,7 +48,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class SelectorActivity extends AppCompatActivity implements SensorEventListener{
+public class SelectorActivity extends AppCompatActivity implements SensorEventListener {
 
     private final ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
@@ -60,8 +67,10 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     private static final int SENSOR_SENSITIVITY = 4;
     private String cuerpoMensaje;
 
+    public IntentFilter filtro;
+    private ReceptorOperacion receiver = new SelectorActivity.ReceptorOperacion();
 
-
+    private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
 
 
     @Override
@@ -74,8 +83,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
         cargarMenu(idMenu);
-        Log.d("Token",((MiAplicacion) getApplication()).getToken());
-        Log.d("Token Refresh",((MiAplicacion) getApplication()).getToken_refresh());
+        Log.d("Token", ((MiAplicacion) getApplication()).getToken());
+        Log.d("Token Refresh", ((MiAplicacion) getApplication()).getToken_refresh());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mAccelerometer = mSensorManager
@@ -88,11 +97,11 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
-            public void onShake(int count,boolean right) {
-                if(idMenu>=0 && idMenu<8 && right)
-                        idMenu++;
-                if(idMenu<=8 && idMenu>0&& !right)
-                        idMenu--;
+            public void onShake(int count, boolean right) {
+                if (idMenu >= 0 && idMenu < 8 && right)
+                    idMenu++;
+                if (idMenu <= 8 && idMenu > 0 && !right)
+                    idMenu--;
                 cargarMenu(idMenu);
 
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
@@ -181,12 +190,12 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 //    }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
-    public void cargarMenu (int numMenu){
-        Log.d("ID MENU","     "+numMenu);
-        String[] campos=listaMenus.get(numMenu);
+    public void cargarMenu(int numMenu) {
+        Log.d("ID MENU", "     " + numMenu);
+        String[] campos = listaMenus.get(numMenu);
         titulo.setText(campos[0]);
         descripcion.setText(campos[2]);
-        precio.setText("$"+campos[1]);
+        precio.setText("$" + campos[1]);
         ImageView imagen = (ImageView) findViewById(R.id.imagen);
         Drawable myDrawable;
 
@@ -232,7 +241,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     }
 
 
-    public void cargarLista(){
+    public void cargarLista() {
         listaMenus.add(("Muzzarella-460-Salsa de tomate, muzzarella, aceitunas").split("-"));
         listaMenus.add(("Huevo-500-Salsa de tomate, muzzarella, huevo duro, oregano, aceitunas").split("-"));
         listaMenus.add(("Fugazzetta-500-Cebolla, muzzarella, adobo p/pizza, aceitunas").split("-"));
@@ -248,8 +257,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     public void onResume() {
         super.onResume();
         // Add the following line to register the Session Manager Listener onResume
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener( this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
     }
 
@@ -268,18 +277,22 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
                 //near
                 Toast.makeText(getApplicationContext(), "Pedido Seleccionado", Toast.LENGTH_SHORT).show();
-                destinos.add("ezezella@gmail.com");
-                destinos.add("jjuampy11@gmail.com");
-                destinos.add("francogd@hotmail.es");
-                cuerpoMensaje="<h2><u><font COLOR='red'>Detalle del pedido: </font></u></h2> <BR>"
-                               + "<b>Menú:</b> " + "Pizza de " + titulo.getText() +"<BR>"
-                               + "<b>Descripción:</b> " + descripcion.getText() + "<BR>"
-                               + "<b>Precio:</b> " + precio.getText()  + "<BR>"
-                               + "<img src='https://image.freepik.com/foto-gratis/gente-comiendo-pizza-restaurante_23-2148172684.jpg' width='200'> <BR><BR>"
-                               + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
+                //destinos.add("ezezella@gmail.com");
+                //destinos.add("jjuampy11@gmail.com");
+                //destinos.add("francogd@hotmail.es");
+                destinos.add(((MiAplicacion) getApplication()).getUsuario());
+                cuerpoMensaje = "<h2><u><font COLOR='red'>Detalle del pedido: </font></u></h2> <BR>"
+                        + "<b>Menú:</b> " + "Pizza de " + titulo.getText() + "<BR>"
+                        + "<b>Descripción:</b> " + descripcion.getText() + "<BR>"
+                        + "<b>Precio:</b> " + precio.getText() + "<BR>"
+                        + "<img src='https://image.freepik.com/foto-gratis/gente-comiendo-pizza-restaurante_23-2148172684.jpg' width='200'> <BR><BR>"
+                        + "En breve le estaremos alcanzando su pedido, que lo disfrute :)";
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
-                        "sacudeycome123", destinos, "Pedido confirmado... alta pizza",cuerpoMensaje);
+                        "sacudeycome123", destinos, "Pedido confirmado... alta pizza", cuerpoMensaje);
                 Log.d("tiempo", "Transcurrido: " + ((MiAplicacion) getApplication()).getTiempoInicio());
+                configurarBroadcastReceiver();
+                String username= ((MiAplicacion) getApplication()).getUsuario();
+                registrarEventoEnServidor("Pedido Registrado", " El usuario " + username + " se ha realizado el pedido");
 
 
             }
@@ -289,6 +302,26 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 //            }
         }
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
+    }
+
+    public void registrarEventoEnServidor(String tipoEvento, String descripcion){
+        JSONObject objEvento = new JSONObject();
+
+        try {
+            Log.d("Pasa por acaa boton registro","Biennnnn2");
+            objEvento.put("env","TEST");
+            objEvento.put("type_events",tipoEvento);
+            objEvento.put("description",descripcion);
+
+            Intent i = new Intent(SelectorActivity.this, ServicesHttp_POST.class);
+            i.putExtra("metodo","POST");
+            i.putExtra("uri", URI_EVENTO);
+            i.putExtra("datosJson", objEvento.toString());
+            i.putExtra("tipo","evento");
+            startService(i);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -349,7 +382,38 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         public void onPostExecute(Object result) {
             statusDialog.dismiss();
         }
-}}
+    }
+
+    private void configurarBroadcastReceiver() {
+        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
+        filtro.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver, filtro);
+    }
+
+    public class ReceptorOperacion extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                String datosJsonString = intent.getStringExtra("datosJson");
+                JSONObject datosJson = new JSONObject(datosJsonString);
+                Log.d("Resultadorequest:", "Request: " + datosJson.get("success").toString());
+                if (datosJson.get("success").toString().equals("true")) {
+                    Toast.makeText(getApplicationContext(), "Pedido registrado ", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Login/Registro incorrecto", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+}
 
 
 //Titulo-Precio-Descripcion-IdImagen

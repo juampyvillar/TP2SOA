@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.MiAplicacion;
-import com.example.sacudeycome.R;
 import com.example.sacudeycome.RegisterActivity;
 import com.example.sacudeycome.SelectorActivity;
 import com.example.sacudeycome.ServicesHttp_POST;
@@ -54,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar ;
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new LoginActivity.ReceptorOperacion();
+    private boolean esLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,6 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                 registerButton.setEnabled(false);
 //                loginViewModel.login(usernameEditText.getText().toString(),
 //                        passwordEditText.getText().toString());
+                esLogin=true;
                 JSONObject obj = new JSONObject();
 
                 try {
@@ -161,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("metodo","POST");
                     i.putExtra("uri", URI_LOGIN);
                     i.putExtra("datosJson", obj.toString());
+                    i.putExtra("tipo","loggin");
                     startService(i);
                 }catch (JSONException e) {
                     e.printStackTrace();
@@ -224,12 +226,16 @@ public class LoginActivity extends AppCompatActivity {
                     token=datosJson.get("token").toString();
                     token_refresh=datosJson.get("token_refresh").toString();
                     //Seteo el token y token refresh
+                    ((MiAplicacion) getApplication()).setUsuario(usernameEditText.getText().toString());
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
                     ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime());//Cero desde token refresh
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
 
-                    registrarEventoEnServidor("Login Correcto", " El usuario "+ usernameEditText.getText() + "Se ha loggeado exitosamente",token);
+                    if(esLogin){
+                        registrarEventoEnServidor("Login Correcto", " El usuario "+ usernameEditText.getText() + " se ha loggeado exitosamente");
+                        esLogin=false;
+                    }
 
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
@@ -243,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        public void registrarEventoEnServidor(String tipoEvento, String descripcion, String token){
+        public void registrarEventoEnServidor(String tipoEvento, String descripcion){
             JSONObject objEvento = new JSONObject();
 
             try {
