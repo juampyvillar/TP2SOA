@@ -1,3 +1,5 @@
+package com.example.sacudeycome;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -5,7 +7,7 @@ import android.provider.BaseColumns;
 
 import com.example.sacudeycome.ShakeDetector;
 
-public final class SQLite  {
+public class SQLite  {
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
     private SQLite() {}
