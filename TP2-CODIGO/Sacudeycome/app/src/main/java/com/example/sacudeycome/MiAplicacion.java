@@ -65,10 +65,6 @@ public class MiAplicacion extends Application {
 
     }
 
-
-
-
-
         public void actualizarTiempoTranscurrido(){
 
                 double tiempoActual = SystemClock.elapsedRealtime();

@@ -26,6 +26,7 @@ import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     private TextView titulo;
     private TextView descripcion;
     private TextView precio;
+    private Button finalizarButton;
 
     private ArrayList<String> destinos = new ArrayList<String>();
 
@@ -82,6 +84,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         titulo = findViewById(R.id.titulo);
         descripcion = findViewById(R.id.desc);
         precio = findViewById(R.id.precio);
+        finalizarButton = findViewById(R.id.finalizarButton);
+        finalizarButton.setOnClickListener(HandlerCmdRegistrar);
         cargarMenu(idMenu);
         Log.d("Token", ((MiAplicacion) getApplication()).getToken());
         Log.d("Token Refresh", ((MiAplicacion) getApplication()).getToken_refresh());
@@ -98,22 +102,40 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake(int count, boolean right) {
-                if (idMenu >= 0 && idMenu < 8 && right)
+                if (idMenu == 0 && !right)
+                    Toast.makeText(getApplicationContext(), "Este es el primer menú, realice un shake hacia la derecha para avanzar al siguiente menú", Toast.LENGTH_SHORT).show();
+                if (idMenu == listaMenus.size()-1 && right)
+                    Toast.makeText(getApplicationContext(), "Este es el ultimo  menú, realice un shake hacia la izquierda para volver al anterior menú", Toast.LENGTH_SHORT).show();
+                if (idMenu >= 0 && idMenu < listaMenus.size()-1 && right)
                     idMenu++;
-                if (idMenu <= 8 && idMenu > 0 && !right)
+                if (idMenu <= listaMenus.size()-1 && idMenu > 0 && !right)
                     idMenu--;
+
                 cargarMenu(idMenu);
 
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
-//                //if(hora_desde >= 12:00 & hora_hasta<= 16:00)
-//                actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
-//                //else if(hora_desde >= 20:00 & hora_hasta<= 24:00)
-//                 //  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
-                leerMetrica("Cantidad Shakes mediodia");
+//                if(hora_desde >= 12:00 & hora_hasta<= 16:00)
+//                  actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
+//                else if(hora_desde >= 20:00 & hora_hasta<= 24:00)
+//                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
+//                leerMetrica("Cantidad Shakes mediodia");
             }
         });
     }
+
+    private View.OnClickListener HandlerCmdRegistrar = new View.OnClickListener()
+    {
+        public void onClick (View v)
+        {
+            Toast.makeText(getApplicationContext(), "Saliendo de la aplicacion", Toast.LENGTH_SHORT).show();
+
+//            android.os.Process.killProcess(android.os.Process.myPid());
+
+            finish();
+//            System.exit(0);
+        }
+    };
 
     private void ingresarMetrica(String titulo, int contadorShakes, String rango ) {
         SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
@@ -364,8 +386,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 publishProgress("Email Enviado.");
                 Log.i("SendMailTask", "Email Enviado.");
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
-                Intent volverLogin = new Intent(SelectorActivity.this, LoginActivity.class);
-                startActivity(volverLogin);
+                cargarMenu(0);
             } catch (Exception e) {
                 publishProgress(e.getMessage());
                 Log.e("SendMailTask", e.getMessage(), e);
@@ -383,7 +404,10 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         public void onPostExecute(Object result) {
             statusDialog.dismiss();
         }
+
     }
+
+
 
     private void configurarBroadcastReceiver() {
         filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
@@ -410,8 +434,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 e.printStackTrace();
             }
         }
-
-
 
     }
 }

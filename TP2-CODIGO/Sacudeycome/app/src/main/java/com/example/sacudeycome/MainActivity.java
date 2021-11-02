@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                         if(token.equals(activity2)){
                             Log.d("ENTRO","Bien");
                             startActivity(pasarActivity);
-
+                            finish();
                         }
                         else
                         {

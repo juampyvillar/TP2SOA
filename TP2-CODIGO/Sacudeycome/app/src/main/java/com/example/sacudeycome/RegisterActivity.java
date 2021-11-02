@@ -125,9 +125,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity;
                     pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
-
-
                     startActivity(pasarActivity);
+                    finish();
 
                 }
                 else {

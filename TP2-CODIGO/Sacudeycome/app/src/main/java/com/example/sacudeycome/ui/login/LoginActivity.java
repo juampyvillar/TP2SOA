@@ -177,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent pasarActivity = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(pasarActivity);
+                finish();
             }
         });
     }
@@ -239,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
+                    finish();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Login/Registro incorrecto", Toast.LENGTH_SHORT).show();

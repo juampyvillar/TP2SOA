@@ -12,21 +12,25 @@
         android:layout_height="314dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.071"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/Bateria"
         android:layout_width="365dp"
         android:layout_height="60dp"
-        android:layout_marginTop="388dp"
         android:text="Nivel de Bateria: "
         android:textAlignment="center"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.569" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
