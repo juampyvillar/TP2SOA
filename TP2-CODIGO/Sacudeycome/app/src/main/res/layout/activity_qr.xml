@@ -24,7 +24,6 @@
         android:layout_width="365dp"
         android:layout_height="60dp"
         android:layout_marginTop="19dp"
-        android:layout_marginBottom="308dp"
         android:text="Nivel de Bateria: "
         android:textAlignment="center"
         android:textSize="24sp"
@@ -32,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_view"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.048" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

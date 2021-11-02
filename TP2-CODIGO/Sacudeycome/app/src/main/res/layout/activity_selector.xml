@@ -38,7 +38,6 @@
         android:layout_width="140dp"
         android:layout_height="45dp"
         android:layout_marginTop="11dp"
-        android:layout_marginBottom="252dp"
         android:text="$000 "
         android:textAlignment="center"
         android:textSize="34sp"
@@ -46,7 +45,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desc" />
+        app:layout_constraintTop_toBottomOf="@+id/desc"
+        app:layout_constraintVertical_bias="0.035" />
 
     <TextView
         android:id="@+id/desc"
@@ -68,12 +68,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="180dp"
         android:text="Finalizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/precio" />
+        app:layout_constraintTop_toBottomOf="@+id/precio"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
