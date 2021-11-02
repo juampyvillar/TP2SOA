@@ -123,8 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                     ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio
 
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
-                    Intent pasarActivity;
-                    pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
+                    Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
                     finish();
 

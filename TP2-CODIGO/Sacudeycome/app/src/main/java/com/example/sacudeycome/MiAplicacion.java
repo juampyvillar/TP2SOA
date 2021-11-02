@@ -19,7 +19,7 @@ import java.util.Timer;
 public class MiAplicacion extends Application {
     private String token;
     private String token_refresh;
-    protected static long topeMinutos=1;
+    protected static long topeMinutos= 1;
     private double tiempoInicio;
     private String usuario;
 
@@ -134,6 +134,4 @@ public class MiAplicacion extends Application {
             }
         }
     }
-
-
 }

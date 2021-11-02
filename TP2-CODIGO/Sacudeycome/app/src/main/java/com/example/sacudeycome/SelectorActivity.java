@@ -95,8 +95,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
-        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
-        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+//        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
+//        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
 
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
