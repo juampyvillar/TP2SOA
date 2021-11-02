@@ -23,7 +23,8 @@
         android:id="@+id/imagen"
         android:layout_width="332dp"
         android:layout_height="214dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="412dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
@@ -36,7 +37,8 @@
         android:id="@+id/precio"
         android:layout_width="140dp"
         android:layout_height="45dp"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginBottom="252dp"
         android:text="$000 "
         android:textAlignment="center"
         android:textSize="34sp"
@@ -44,14 +46,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desc"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintTop_toBottomOf="@+id/desc" />
 
     <TextView
         android:id="@+id/desc"
         android:layout_width="339dp"
         android:layout_height="91dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="308dp"
         android:text="Descripcion"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -65,13 +67,13 @@
         android:id="@+id/finalizarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="180dp"
         android:text="Finalizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/precio"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/precio" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
