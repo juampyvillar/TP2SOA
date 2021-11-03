@@ -122,7 +122,7 @@ public class MiAplicacion extends Application {
                     setToken(token);
                     setToken_refresh(token_refresh);
                     setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio
-
+                    unregisterReceiver(receiver);
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                 }
                 else {

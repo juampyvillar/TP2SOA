@@ -125,6 +125,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
+                    unregisterReceiver(receiver);
                     finish();
 
                 }

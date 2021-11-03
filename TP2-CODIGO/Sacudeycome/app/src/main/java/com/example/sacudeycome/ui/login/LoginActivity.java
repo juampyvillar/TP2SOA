@@ -35,7 +35,6 @@ import com.example.sacudeycome.RegisterActivity;
 import com.example.sacudeycome.SelectorActivity;
 import com.example.sacudeycome.ServicesHttp_POST;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,9 +216,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent){
             try{
-                String datosJsonString = intent.getStringExtra("datosJson");
+                    String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.d("Resultadorequest:" ,"Request: " + datosJson.get("success").toString());
+                Log.d("ON RECEIVE LOGIN:", "ENTRE POR EL LOGIN ACA!!!!");
                 loadingProgressBar.setVisibility(View.GONE);
                 if(datosJson.get("success").toString().equals("true")){
                     String token =  new String();
@@ -240,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent pasarActivity  = new Intent(LoginActivity.this, SelectorActivity.class);
                     startActivity(pasarActivity);
+                    unregisterReceiver(receiver);
                     finish();
                 }
                 else {

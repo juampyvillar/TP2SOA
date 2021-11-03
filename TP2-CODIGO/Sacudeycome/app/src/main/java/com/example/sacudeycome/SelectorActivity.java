@@ -20,6 +20,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -32,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.ui.login.LoginActivity;
-import com.example.sacudeycome.SQLite;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -95,8 +96,18 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
-//        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
-//        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
+        SQLiteDatabase db= dbhelper.getWritableDatabase();
+        if(db != null){
+            Toast.makeText(getApplicationContext(), "CREADA LA BASE", Toast.LENGTH_SHORT).show();
+        }else
+        {
+            Toast.makeText(getApplicationContext(), "ERROR CREAR LA BASE", Toast.LENGTH_SHORT).show();
+        }
+
+        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
+        //ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+
 
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
@@ -137,79 +148,83 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         }
     };
 
+    private void chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            Log.d( "ChequeoInternet","Hay Conexion a Internet ");
+
+        }else{
+            Log.d( "ChequeoInternet","No hay Conexion a Internet ");
+        }
+
+    }
+
     private void ingresarMetrica(String titulo, int contadorShakes, String rango ) {
-        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-        // Gets the data repository in write mode
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE, titulo);
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE2, contadorShakes);
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE3, rango);
-        values.put(SQLite.SQLentry.COLUMN_NAME_SUBTITLE, "subtitle");
-
-// Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(SQLite.SQLentry.TABLE_NAME, null, values);
+        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
+        // Insert the new row, returning the primary key value of the new row
+        dbhelper.insertar(titulo,contadorShakes,rango);
+        //long newRowId = db.insert(EsquemaBase.tabla.TABLA, null, values);
+        Toast.makeText(getApplicationContext(), "PASA POR INGRESAR METRICA " , Toast.LENGTH_SHORT).show();
     }
 
    public void actualizarMetrica(String titulo, int contadorShakes){
-       SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-       SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        // New value for one column
-        ContentValues values = new ContentValues();
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE2, contadorShakes);
-
-        // Which row to update, based on the title
-        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + "LIKE ?";
-        String[] selectionArgs = { titulo };
-
-        int count = db.update(
-                SQLite.SQLentry.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs);
+//       SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
+//       SQLiteDatabase db = dbHelper.getWritableDatabase();
+//
+//        // New value for one column
+//        ContentValues values = new ContentValues();
+//        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE2, contadorShakes);
+//
+//        // Which row to update, based on the title
+//        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + "LIKE ?";
+//        String[] selectionArgs = { titulo };
+//
+//        int count = db.update(
+//                SQLite.SQLentry.TABLE_NAME,
+//                values,
+//                selection,
+//                selectionArgs);
     }
 
     public void leerMetrica(String titulo){
-        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
-        String[] projection = {
-                BaseColumns._ID,
-                SQLite.SQLentry.COLUMN_NAME_TITLE,
-                SQLite.SQLentry.COLUMN_NAME_TITLE2,
-                SQLite.SQLentry.COLUMN_NAME_TITLE3
-        };
-
-// Filter results WHERE "title" = 'My Title'
-        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + " = " +titulo;
-        String[] selectionArgs = { titulo };
-
-// How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                SQLite.SQLentry.COLUMN_NAME_SUBTITLE + " DESC";
-
-        Cursor cursor = db.query(
-                SQLite.SQLentry.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                selection,              // The columns for the WHERE clause
-                selectionArgs,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
-        );
-
-        List itemIds = new ArrayList<>();
-        while(cursor.moveToNext()) {
-            long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(SQLite.SQLentry._ID));
-            itemIds.add(itemId);
-        }
-        cursor.close();
+//        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//
+//// Define a projection that specifies which columns from the database
+//// you will actually use after this query.
+//        String[] projection = {
+//                BaseColumns._ID,
+//                SQLite.SQLentry.COLUMN_NAME_TITLE,
+//                SQLite.SQLentry.COLUMN_NAME_TITLE2,
+//                SQLite.SQLentry.COLUMN_NAME_TITLE3
+//        };
+//
+//// Filter results WHERE "title" = 'My Title'
+//        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + " = " +titulo;
+//        String[] selectionArgs = { titulo };
+//
+//// How you want the results sorted in the resulting Cursor
+//        String sortOrder =
+//                SQLite.SQLentry.COLUMN_NAME_SUBTITLE + " DESC";
+//
+//        Cursor cursor = db.query(
+//                SQLite.SQLentry.TABLE_NAME,   // The table to query
+//                projection,             // The array of columns to return (pass null to get all)
+//                selection,              // The columns for the WHERE clause
+//                selectionArgs,          // The values for the WHERE clause
+//                null,                   // don't group the rows
+//                null,                   // don't filter by row groups
+//                sortOrder               // The sort order
+//        );
+//
+//        List itemIds = new ArrayList<>();
+//        while(cursor.moveToNext()) {
+//            long itemId = cursor.getLong(
+//                    cursor.getColumnIndexOrThrow(SQLite.SQLentry._ID));
+//            itemIds.add(itemId);
+//        }
+//        cursor.close();
     }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
@@ -313,6 +328,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
                         "sacudeycome123", destinos, "Pedido confirmado... alta pizza", cuerpoMensaje);
                 Log.d("tiempo", "Transcurrido: " + ((MiAplicacion) getApplication()).getTiempoInicio());
+                chequearConexionInternet();
                 configurarBroadcastReceiver();
                 String username= ((MiAplicacion) getApplication()).getUsuario();
                 registrarEventoEnServidor("Pedido Registrado", " El usuario " + username + " se ha realizado el pedido");
@@ -386,6 +402,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 publishProgress("Email Enviado.");
                 Log.i("SendMailTask", "Email Enviado.");
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
+                unregisterReceiver(receiver);
                 cargarMenu(0);
             } catch (Exception e) {
                 publishProgress(e.getMessage());
