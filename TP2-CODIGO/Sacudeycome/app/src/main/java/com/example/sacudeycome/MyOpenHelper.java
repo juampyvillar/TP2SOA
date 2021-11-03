@@ -15,7 +15,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(" CREATE TABLE " + TABLA + "(" +
+        db.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLA + "(" +
                 "nombre TEXT PRIMARY KEY ," +
                 "valor INTEGER," +
                 "franja TEXT ) " );

@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -72,6 +73,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new SelectorActivity.ReceptorOperacion();
+    //private boolean tablaCreada=false;
 
     private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
 
@@ -105,8 +107,9 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             Toast.makeText(getApplicationContext(), "ERROR CREAR LA BASE", Toast.LENGTH_SHORT).show();
         }
 
+
         ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
-        //ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
 
 
         mShakeDetector = new ShakeDetector();
@@ -126,10 +129,14 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
-//                if(hora_desde >= 12:00 & hora_hasta<= 16:00)
+                Calendar rightNow = Calendar.getInstance();
+                int horaActual = rightNow.get(Calendar.HOUR_OF_DAY);
+               // int minutosActual = rightNow.get(Calendar.MINUTE);
+                Log.d("HORA","Hora actual: " + horaActual);
+               if(horaActual >= 12 & horaActual<= 16)
                   actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
-//                else if(hora_desde >= 20:00 & hora_hasta<= 24:00)
-//                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
+                else if(horaActual >= 20)
+                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
 //                leerMetrica("Cantidad Shakes mediodia");
             }
         });
