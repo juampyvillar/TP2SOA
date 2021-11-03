@@ -132,24 +132,16 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(pasarActivity);
                             finish();
                         }
-                        else
-                        {
-//                            Context context = getApplicationContext();
-//                            Log.d("ENTRO",context.toString());
-//                            toast = Toast.makeText(context, "El QR escaneado no es correcto", Toast.LENGTH_SHORT);
-                        }
+
 
                         new Thread(new Runnable() {
                             public void run() {
                                 try {
                                     synchronized (this) {
                                         wait(5000);
-                                        // limpiamos el token
                                         tokenanterior = "";
-
                                     }
                                 } catch (InterruptedException e) {
-                                    // TODO Auto-generated catch block
                                     Log.e("Error", "Waiting didnt work!!");
                                     e.printStackTrace();
                                 }

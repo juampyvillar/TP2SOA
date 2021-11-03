@@ -40,7 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
-    //ParametrosGenerales objeto = ParametrosGenerales.getInstancia("token", "token_refresh");
 
 
     @Override
@@ -122,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                     ((MiAplicacion) getApplication()).setUsuario(editEmail.getText().toString());
                     ((MiAplicacion) getApplication()).setToken(token);
                     ((MiAplicacion) getApplication()).setToken_refresh(token_refresh);
-                    ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime()); //valor actual como inicio
+                    ((MiAplicacion) getApplication()).setTiempoInicio(SystemClock.elapsedRealtime());
 
                     Toast.makeText(getApplicationContext(), "Acceso exitoso", Toast.LENGTH_SHORT).show();
                     Intent pasarActivity = new Intent(RegisterActivity.this, SelectorActivity.class);

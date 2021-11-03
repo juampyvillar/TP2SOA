@@ -39,7 +39,6 @@ public class MyOpenHelper extends SQLiteOpenHelper {
     public void actualizar (String metrica, int valor){
         SQLiteDatabase bd=getWritableDatabase();
         String update = " UPDATE " + TABLA + " SET valor = " + valor + " WHERE nombre = " + "'" + metrica + "'"+ ";";
-        //"(" +  "'" + metrica  + "'" + "," + valor + "," + "'" + rango + "'" + ")";
         if(bd != null){
             Log.d("DEBUG","Esto entra a insertar y se rompe amigo");
             bd.execSQL(update);

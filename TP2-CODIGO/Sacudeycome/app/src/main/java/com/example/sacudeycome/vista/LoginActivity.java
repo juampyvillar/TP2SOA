@@ -105,9 +105,6 @@ public class LoginActivity extends AppCompatActivity {
                     updateUiWithUser(loginResult.getSuccess());
                 }
                 setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                //finish();
             }
         });
 
@@ -149,8 +146,6 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginButton.setEnabled(false);
                 registerButton.setEnabled(false);
-//                loginViewModel.login(usernameEditText.getText().toString(),
-//                        passwordEditText.getText().toString());
                 esLogin=true;
                 JSONObject obj = new JSONObject();
 
@@ -185,7 +180,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = "Bienvenido/a ";
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
@@ -201,8 +195,6 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setEnabled(true);
         }else{
             Toast.makeText(getApplicationContext(), "No hay conexion a Internet ", Toast.LENGTH_SHORT).show();
-          //  loginButton.setEnabled(false);
-
         }
 
     }

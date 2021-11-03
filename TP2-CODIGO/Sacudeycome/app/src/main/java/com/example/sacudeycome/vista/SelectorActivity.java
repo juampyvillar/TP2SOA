@@ -62,7 +62,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new SelectorActivity.ReceptorOperacion();
-    //private boolean tablaCreada=false;
 
     private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
 
@@ -90,15 +89,11 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
         SQLiteDatabase db= dbhelper.getWritableDatabase();
         if(db != null){
-            Toast.makeText(getApplicationContext(), "CREADA LA BASE", Toast.LENGTH_SHORT).show();
             ingresarMetrica("Cantidad Shakes mediodia", contShakes, "De 12:00 a 16:00");
             ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00");
         }else
         {
-            Toast.makeText(getApplicationContext(), "ERROR CREAR LA BASE", Toast.LENGTH_SHORT).show();
-        }
-        if(contShakes==0) {
-
+            Log.d("ERROR CREAR LA BASE","ERROR" );
         }
 
 
@@ -121,13 +116,11 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
                 Calendar rightNow = Calendar.getInstance();
                 int horaActual = rightNow.get(Calendar.HOUR_OF_DAY);
-               // int minutosActual = rightNow.get(Calendar.MINUTE);
                 Log.d("HORA","Hora actual: " + horaActual);
                if(horaActual > 12 & horaActual< 16)
                   actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
                 else if(horaActual > 20)
                   actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
-//                leerMetrica("Cantidad Shakes mediodia");
             }
         });
     }
@@ -137,11 +130,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         public void onClick (View v)
         {
             Toast.makeText(getApplicationContext(), "Saliendo de la aplicacion", Toast.LENGTH_SHORT).show();
-
-//            android.os.Process.killProcess(android.os.Process.myPid());
-
             finish();
-//            System.exit(0);
         }
     };
 
@@ -159,58 +148,12 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     private void ingresarMetrica(String titulo, int contadorShakes, String rango ) {
         MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
-        // Insert the new row, returning the primary key value of the new row
         dbhelper.insertar(titulo,contadorShakes,rango);
-        //long newRowId = db.insert(EsquemaBase.tabla.TABLA, null, values);
-        Toast.makeText(getApplicationContext(), "PASA POR INGRESAR METRICA " , Toast.LENGTH_SHORT).show();
     }
 
    public void actualizarMetrica(String titulo, int contadorShakes){
        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
-       // Insert the new row, returning the primary key value of the new row
        dbhelper.actualizar(titulo,contadorShakes);
-       //long newRowId = db.insert(EsquemaBase.tabla.TABLA, null, values);
-       Toast.makeText(getApplicationContext(), "PASA POR ACTUALIZAR METRICA " , Toast.LENGTH_SHORT).show();
-    }
-
-    public void leerMetrica(String titulo){
-//        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-//        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-//// Define a projection that specifies which columns from the database
-//// you will actually use after this query.
-//        String[] projection = {
-//                BaseColumns._ID,
-//                SQLite.SQLentry.COLUMN_NAME_TITLE,
-//                SQLite.SQLentry.COLUMN_NAME_TITLE2,
-//                SQLite.SQLentry.COLUMN_NAME_TITLE3
-//        };
-//
-//// Filter results WHERE "title" = 'My Title'
-//        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + " = " +titulo;
-//        String[] selectionArgs = { titulo };
-//
-//// How you want the results sorted in the resulting Cursor
-//        String sortOrder =
-//                SQLite.SQLentry.COLUMN_NAME_SUBTITLE + " DESC";
-//
-//        Cursor cursor = db.query(
-//                SQLite.SQLentry.TABLE_NAME,   // The table to query
-//                projection,             // The array of columns to return (pass null to get all)
-//                selection,              // The columns for the WHERE clause
-//                selectionArgs,          // The values for the WHERE clause
-//                null,                   // don't group the rows
-//                null,                   // don't filter by row groups
-//                sortOrder               // The sort order
-//        );
-//
-//        List itemIds = new ArrayList<>();
-//        while(cursor.moveToNext()) {
-//            long itemId = cursor.getLong(
-//                    cursor.getColumnIndexOrThrow(SQLite.SQLentry._ID));
-//            itemIds.add(itemId);
-//        }
-//        cursor.close();
     }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
@@ -280,7 +223,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     @Override
     public void onResume() {
         super.onResume();
-        // Add the following line to register the Session Manager Listener onResume
         mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
@@ -288,7 +230,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     @Override
     public void onPause() {
-        // Add the following line to unregister the Sensor Manager onPause
         super.onPause();
         mSensorManager.unregisterListener(mShakeDetector);
         mSensorManager.unregisterListener(this);
@@ -299,11 +240,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             if (event.values[0] >= -SENSOR_SENSITIVITY && event.values[0] <= SENSOR_SENSITIVITY) {
-                //near
                 Toast.makeText(getApplicationContext(), "Pedido Seleccionado", Toast.LENGTH_SHORT).show();
-                //destinos.add("ezezella@gmail.com");
-                //destinos.add("jjuampy11@gmail.com");
-                //destinos.add("francogd@hotmail.es");
                 destinos.add(((MiAplicacion) getApplication()).getUsuario());
                 cuerpoMensaje = "<h2><u><font COLOR='red'>Detalle del pedido: </font></u></h2> <BR>"
                         + "<b>Menú:</b> " + "Pizza de " + titulo.getText() + "<BR>"
@@ -321,10 +258,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
 
             }
-//            else {
-//                far
-//                Toast.makeText(getApplicationContext(), "far", Toast.LENGTH_SHORT).show();
-//            }
         }
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
     }
@@ -407,10 +340,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         public void onPostExecute(Object result) {
             statusDialog.dismiss();
         }
-
     }
-
-
 
     private void configurarBroadcastReceiver() {
         filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
@@ -437,9 +367,5 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 e.printStackTrace();
             }
         }
-
     }
 }
-
-
-//Titulo-Precio-Descripcion-IdImagen
