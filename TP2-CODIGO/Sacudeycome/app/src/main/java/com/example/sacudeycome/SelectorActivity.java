@@ -102,14 +102,15 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         SQLiteDatabase db= dbhelper.getWritableDatabase();
         if(db != null){
             Toast.makeText(getApplicationContext(), "CREADA LA BASE", Toast.LENGTH_SHORT).show();
+            ingresarMetrica("Cantidad Shakes mediodia", contShakes, "De 12:00 a 16:00");
+            ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00");
         }else
         {
             Toast.makeText(getApplicationContext(), "ERROR CREAR LA BASE", Toast.LENGTH_SHORT).show();
         }
+        if(contShakes==0) {
 
-
-        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
-        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+        }
 
 
         mShakeDetector = new ShakeDetector();
@@ -133,9 +134,9 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 int horaActual = rightNow.get(Calendar.HOUR_OF_DAY);
                // int minutosActual = rightNow.get(Calendar.MINUTE);
                 Log.d("HORA","Hora actual: " + horaActual);
-               if(horaActual >= 12 & horaActual<= 16)
+               if(horaActual > 12 & horaActual< 16)
                   actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
-                else if(horaActual >= 20)
+                else if(horaActual > 20)
                   actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
 //                leerMetrica("Cantidad Shakes mediodia");
             }

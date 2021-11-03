@@ -31,10 +31,9 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         String values="(" +  "'" + metrica  + "'" + "," + valor + "," + "'" + rango + "'" + ")";
         if(bd != null){
             Log.d("DEBUG","Esto entra a insertar y se rompe amigo");
-            bd.execSQL(" INSERT INTO " + TABLA + " VALUES " + values );
+            bd.execSQL(" INSERT OR REPLACE INTO " + TABLA + " VALUES " + values );
             bd.close();
         }
-
     }
 
     public void actualizar (String metrica, int valor){
@@ -46,6 +45,5 @@ public class MyOpenHelper extends SQLiteOpenHelper {
             bd.execSQL(update);
             bd.close();
         }
-//        UPDATE COMPANY SET ADDRESS = 'Texas' WHERE ID = 6;
     }
 }
