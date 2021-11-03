@@ -1,7 +1,5 @@
 package com.example.sacudeycome;
 
-import static java.security.AccessController.getContext;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -22,7 +20,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
@@ -31,23 +28,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sacudeycome.ui.login.LoginActivity;
-import com.example.sacudeycome.SQLite;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 public class SelectorActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -95,8 +81,17 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
-//        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
-//        ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
+        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
+        SQLiteDatabase db= dbhelper.getWritableDatabase();
+        if(db != null){
+            Toast.makeText(getApplicationContext(), "CREADA LA BASE", Toast.LENGTH_SHORT).show();
+        }else
+        {
+            Toast.makeText(getApplicationContext(), "ERROR CREAR LA BASE", Toast.LENGTH_SHORT).show();
+        }
+
+        ingresarMetrica("Cantidad Shakes mediodia",  contShakes,"De 12:00 a 16:00");
+        //ingresarMetrica("Cantidad Shakes noche",  contShakes,"De 20:00 a 00:00");
 
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
@@ -119,7 +114,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 //                  actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
 //                else if(hora_desde >= 20:00 & hora_hasta<= 24:00)
 //                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
-//                leerMetrica("Cantidad Shakes mediodia");
+//                  leerMetrica("Cantidad Shakes mediodia");
             }
         });
     }
@@ -138,22 +133,15 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     };
 
     private void ingresarMetrica(String titulo, int contadorShakes, String rango ) {
-        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-        // Gets the data repository in write mode
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE, titulo);
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE2, contadorShakes);
-        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE3, rango);
-        values.put(SQLite.SQLentry.COLUMN_NAME_SUBTITLE, "subtitle");
-
+        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
 // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(SQLite.SQLentry.TABLE_NAME, null, values);
+        dbhelper.insertar(titulo,contadorShakes,rango);
+        //long newRowId = db.insert(EsquemaBase.tabla.TABLA, null, values);
+        Toast.makeText(getApplicationContext(), "PASA POR INGRESAR METRICA " , Toast.LENGTH_SHORT).show();
     }
 
-   public void actualizarMetrica(String titulo, int contadorShakes){
+   /*public void actualizarMetrica(String titulo, int contadorShakes){
        SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -191,7 +179,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
 // How you want the results sorted in the resulting Cursor
         String sortOrder =
-                SQLite.SQLentry.COLUMN_NAME_SUBTITLE + " DESC";
+                SQLite.SQLentry.COLUMN_NAME_TITLE+ " DESC";
 
         Cursor cursor = db.query(
                 SQLite.SQLentry.TABLE_NAME,   // The table to query
@@ -210,7 +198,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             itemIds.add(itemId);
         }
         cursor.close();
-    }
+    }*/
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     public void cargarMenu(int numMenu) {
