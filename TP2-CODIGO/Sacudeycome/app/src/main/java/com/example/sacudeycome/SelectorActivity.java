@@ -127,7 +127,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
 //                if(hora_desde >= 12:00 & hora_hasta<= 16:00)
-//                  actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
+                  actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
 //                else if(hora_desde >= 20:00 & hora_hasta<= 24:00)
 //                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
 //                leerMetrica("Cantidad Shakes mediodia");
@@ -169,22 +169,11 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     }
 
    public void actualizarMetrica(String titulo, int contadorShakes){
-//       SQLite.SQLHelper dbHelper = new SQLite.SQLHelper(getApplicationContext());
-//       SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        // New value for one column
-//        ContentValues values = new ContentValues();
-//        values.put(SQLite.SQLentry.COLUMN_NAME_TITLE2, contadorShakes);
-//
-//        // Which row to update, based on the title
-//        String selection = SQLite.SQLentry.COLUMN_NAME_TITLE + "LIKE ?";
-//        String[] selectionArgs = { titulo };
-//
-//        int count = db.update(
-//                SQLite.SQLentry.TABLE_NAME,
-//                values,
-//                selection,
-//                selectionArgs);
+       MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
+       // Insert the new row, returning the primary key value of the new row
+       dbhelper.actualizar(titulo,contadorShakes);
+       //long newRowId = db.insert(EsquemaBase.tabla.TABLA, null, values);
+       Toast.makeText(getApplicationContext(), "PASA POR ACTUALIZAR METRICA " , Toast.LENGTH_SHORT).show();
     }
 
     public void leerMetrica(String titulo){
