@@ -267,7 +267,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
         try {
             Log.d("Pasa por acaa boton registro","Biennnnn2");
-            objEvento.put("env","TEST");
+            objEvento.put("env","PROD");
             objEvento.put("type_events",tipoEvento);
             objEvento.put("description",descripcion);
 
