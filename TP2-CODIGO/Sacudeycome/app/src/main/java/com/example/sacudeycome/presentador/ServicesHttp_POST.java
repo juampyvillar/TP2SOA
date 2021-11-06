@@ -70,7 +70,7 @@ public class ServicesHttp_POST extends IntentService {
             URL mUrl = new URL(uri);
             urlConnection = (HttpURLConnection) mUrl.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            if(tipo.equals("Evento")){
+            if(tipo.equals("evento")){
                 String token = ((MiAplicacion) getApplication()).getToken();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + token +"; charset=UTF-8");
             }
