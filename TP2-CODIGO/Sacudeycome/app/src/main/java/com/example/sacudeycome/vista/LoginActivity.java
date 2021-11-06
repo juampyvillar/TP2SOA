@@ -142,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("ENTRO LOGIN","Bien1");
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginButton.setEnabled(false);
                 registerButton.setEnabled(false);
@@ -150,7 +149,6 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
 
                 try {
-                    Log.d("Pasa por acaa boton registro","Biennnnn2");
                     obj.put("email",usernameEditText.getText().toString());
                     obj.put("password",passwordEditText.getText().toString());
 
@@ -213,7 +211,6 @@ public class LoginActivity extends AppCompatActivity {
                     String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.d("Resultadorequest:" ,"Request: " + datosJson.get("success").toString());
-                Log.d("ON RECEIVE LOGIN:", "ENTRE POR EL LOGIN ACA!!!!");
                 loadingProgressBar.setVisibility(View.GONE);
                 if(datosJson.get("success").toString().equals("true")){
                     String token =  new String();
@@ -250,7 +247,6 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject objEvento = new JSONObject();
 
             try {
-                Log.d("Pasa por acaa boton registro","Biennnnn2");
                 objEvento.put("env","TEST");
                 objEvento.put("type_events",tipoEvento);
                 objEvento.put("description",descripcion);
@@ -266,10 +262,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-
 }
 
 

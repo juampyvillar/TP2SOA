@@ -1,9 +1,0 @@
-Muzzarella-460-Salsa de tomate, muzzarella, aceitunas-1
-Huevo-500-Salsa de tomate, muzzarella, huevo duro, oregano, aceitunas-2
-Fugazzetta-500-Cebolla, muzzarella, adobo p/pizza, aceitunas-3
-Fugazzeta con panceta-550-Muzzarella, cebolla, panceta, adobo p/pizza, aceitunas-4
-Jamon-550-Salsa de tomate, muzzarella, jamon, oregano, aceitunas-5
-Jamon y morrones-600-Salsa de tomate, muzzarella, jamon, morrones asados, oregano, aceitunas-6
-Napolitana-510-Salsa de tomate, muzzarella, tomate en rodajas, provenzal, aceitunas-7
-Calabresa-610-Salsa de tomate, muzzarella,longaniza, morron asado en tiras, oregano, aceitunas-8
-Roquefort-610-Salsa de tomate, muzzarella, roquefort, oregano, aceitunas-9

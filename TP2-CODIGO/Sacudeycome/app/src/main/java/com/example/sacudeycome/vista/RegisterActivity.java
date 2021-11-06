@@ -75,10 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             public void onClick (View v)
             {
-                Log.d("Pasa por acaa boton registro","Biennnnn1");
                 JSONObject obj = new JSONObject();
                 try {
-                    Log.d("Pasa por acaa boton registro","Biennnnn2");
                     obj.put("env","PROD");
                     obj.put("name",editNombre.getText().toString());
                     obj.put("lastname",editApellido.getText().toString());
