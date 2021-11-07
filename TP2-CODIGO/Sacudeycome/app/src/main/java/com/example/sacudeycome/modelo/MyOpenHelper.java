@@ -7,8 +7,8 @@ import android.util.Log;
 
 
 public class MyOpenHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "metrica2.db";
-    private static final String TABLA = "Metrica2";
+    private static final String DB_NAME = "metrica.db";
+    private static final String TABLA = "Metrica";
     private static final int DB_VERSION = 1;
     public MyOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -30,7 +30,6 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase bd=getWritableDatabase();
         String values="(" +  "'" + metrica  + "'" + "," + valor + "," + "'" + rango + "'" + ")";
         if(bd != null){
-            Log.d("DEBUG","Esto entra a insertar y se rompe amigo");
             bd.execSQL(" INSERT OR REPLACE INTO " + TABLA + " VALUES " + values );
             bd.close();
         }
@@ -40,7 +39,6 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase bd=getWritableDatabase();
         String update = " UPDATE " + TABLA + " SET valor = " + valor + " WHERE nombre = " + "'" + metrica + "'"+ ";";
         if(bd != null){
-            Log.d("DEBUG","Esto entra a insertar y se rompe amigo");
             bd.execSQL(update);
             bd.close();
         }

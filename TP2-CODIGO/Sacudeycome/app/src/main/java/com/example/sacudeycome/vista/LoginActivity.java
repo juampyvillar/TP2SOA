@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sacudeycome.modelo.MiAplicacion;
-import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.LoginFormState;
 import com.example.sacudeycome.presentador.LoginResult;
 import com.example.sacudeycome.modelo.LoginViewModel;
@@ -55,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar ;
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new LoginActivity.ReceptorOperacion();
-    private Conexiones conexion = new Conexiones();
     private boolean esLogin;
 
     @Override
@@ -76,8 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
        registerButton.setEnabled(true);
-        if(conexion.chequearConexionInternet()){
-            Log.d("oncreate","antes de chequear conexion");
+        if(chequearConexionInternet()){
             loginButton.setEnabled(true);
             configurarBroadcastReceiver();
             Toast.makeText(getApplicationContext(), "Hay Conexion a Internet ", Toast.LENGTH_SHORT).show();
@@ -193,6 +190,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     public void configurarBroadcastReceiver(){

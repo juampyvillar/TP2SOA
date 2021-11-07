@@ -11,7 +11,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.ServicesHttp_POST;
 
 import org.json.JSONException;
@@ -22,15 +21,13 @@ import java.util.ArrayList;
 public class MiAplicacion extends Application {
     private String token;
     private String token_refresh;
-    protected static long topeMinutos= 1;
+    protected static long topeMinutos= 10;
     private double tiempoInicio;
     private String usuario;
 
     private static final String URI_ACTUALIZAR = "http://so-unlam.net.ar/api/api/refresh";
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new MiAplicacion.ReceptorOperacion();
-    private Conexiones conexion = new Conexiones();
-
     private static final ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
     public String getToken() {
@@ -59,7 +56,7 @@ public class MiAplicacion extends Application {
 
     public void actualizarToken_refresh(){
         //solicitud al servidor y actualizar token
-        if(conexion.chequearConexionInternet())
+        if(chequearConexionInternet())
         {
             configurarBroadcastReceiver();
             Intent i = new Intent(MiAplicacion.this, ServicesHttp_POST.class);
@@ -86,6 +83,12 @@ public class MiAplicacion extends Application {
             Log.d("tiempo:","MiAplicacion: " + tiempoInicio);
             Log.d("tiempo:","MiAplicacion: tiempo transcurrido: " + elapsedMinutos);
 
+    }
+
+    public boolean chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void configurarBroadcastReceiver(){
@@ -122,7 +125,7 @@ public class MiAplicacion extends Application {
             try{
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.d("RespuestaServer","33333 " + datosJson.toString());
+                Log.d("RespuestaServer"," " + datosJson.toString());
                 if(datosJson.get("success").toString().equals("true")){
                     String token =  new String();
                     String token_refresh =new String();

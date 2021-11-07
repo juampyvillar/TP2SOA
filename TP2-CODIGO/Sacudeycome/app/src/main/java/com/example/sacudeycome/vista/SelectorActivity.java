@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.GMail;
 import com.example.sacudeycome.modelo.MiAplicacion;
 import com.example.sacudeycome.modelo.MyOpenHelper;
@@ -62,7 +61,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     private String cuerpoMensaje;
 
     public IntentFilter filtro;
-    private Conexiones conexion = new Conexiones();
     private ReceptorOperacion receiver = new SelectorActivity.ReceptorOperacion();
 
     private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
@@ -186,6 +184,13 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
+    private void configurarBroadcastReceiver() {
+        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
+        filtro.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(receiver, filtro);
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -217,7 +222,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
                         "sacudeycome123", destinos, "Pedido confirmado... alta pizza", cuerpoMensaje);
                 Log.d("tiempo", "Transcurrido: " + ((MiAplicacion) getApplication()).getTiempoInicio());
-                if(conexion.chequearConexionInternet()){
+                if(chequearConexionInternet()){
                     configurarBroadcastReceiver();
                     String username= ((MiAplicacion) getApplication()).getUsuario();
                     registrarEventoEnServidor("Pedido Registrado", " El usuario " + username + " se ha realizado el pedido");
@@ -254,6 +259,13 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
 
     }
 
+    public boolean chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+
     public class SendMailTask extends AsyncTask {
 
         private ProgressDialog statusDialog;
@@ -271,6 +283,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             statusDialog.setCancelable(false);
             statusDialog.show();
         }
+
+
 
         @Override
         protected Object doInBackground(Object... args) {
@@ -309,11 +323,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
-    private void configurarBroadcastReceiver() {
-        filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
-        filtro.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(receiver, filtro);
-    }
+
 
     public class ReceptorOperacion extends BroadcastReceiver {
 

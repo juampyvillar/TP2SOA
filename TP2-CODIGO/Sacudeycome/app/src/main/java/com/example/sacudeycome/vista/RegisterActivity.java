@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.sacudeycome.modelo.MiAplicacion;
 import com.example.sacudeycome.R;
-import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.ServicesHttp_POST;
 
 import org.json.JSONException;
@@ -41,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
-    private Conexiones conexion = new Conexiones();
 
 
     @Override
@@ -54,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.Email);
         editPass = findViewById(R.id.password);
         buttonRegistrar = findViewById(R.id.register);
-        if(conexion.chequearConexionInternet()){
+        if(chequearConexionInternet()){
             Toast.makeText(getApplicationContext(), "Hay Conexion a Internet ", Toast.LENGTH_SHORT).show();
             buttonRegistrar.setEnabled(true);
             buttonRegistrar.setOnClickListener(HandlerCmdRegistrar);
@@ -93,6 +90,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
     };
+
+    public boolean chequearConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
 
     private void configurarBroadcastReceiver(){
         filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
