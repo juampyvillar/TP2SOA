@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.sacudeycome.modelo.MiAplicacion;
 import com.example.sacudeycome.R;
+import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.ServicesHttp_POST;
 
 import org.json.JSONException;
@@ -40,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final Integer COMISION=3900;
     private static final Integer GRUPO=9;
+    private Conexiones conexion = new Conexiones();
 
 
     @Override
@@ -52,22 +54,16 @@ public class RegisterActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.Email);
         editPass = findViewById(R.id.password);
         buttonRegistrar = findViewById(R.id.register);
-        chequearConexionInternet();
-        configurarBroadcastReceiver();
-    }
-
-    private void chequearConexionInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
+        if(conexion.chequearConexionInternet()){
             Toast.makeText(getApplicationContext(), "Hay Conexion a Internet ", Toast.LENGTH_SHORT).show();
             buttonRegistrar.setEnabled(true);
             buttonRegistrar.setOnClickListener(HandlerCmdRegistrar);
-        }else{
+            configurarBroadcastReceiver();
+        }
+        else {
             Toast.makeText(getApplicationContext(), "No hay conexion a Internet ", Toast.LENGTH_SHORT).show();
             buttonRegistrar.setEnabled(false);
         }
-
     }
 
     private View.OnClickListener HandlerCmdRegistrar = new View.OnClickListener()

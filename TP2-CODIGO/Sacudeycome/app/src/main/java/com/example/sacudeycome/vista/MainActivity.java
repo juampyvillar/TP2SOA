@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.sacudeycome.R;
+import com.example.sacudeycome.presentador.Bateria;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -41,22 +42,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr);
-
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         bateria = findViewById(R.id.Bateria);
         initQR();
-        verificarBateria();
+        Bateria.verificarBateria(bateria,this);
 
-    }
-
-    private void verificarBateria() {
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = this.registerReceiver(null, ifilter);
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        Float batteryPct = level * 100 / (float)scale;
-        bateria.setText("Nivel de Bateria: " + batteryPct.intValue() + "%");
     }
 
     public void initQR() {

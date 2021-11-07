@@ -27,10 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.GMail;
 import com.example.sacudeycome.modelo.MiAplicacion;
 import com.example.sacudeycome.modelo.MyOpenHelper;
 import com.example.sacudeycome.R;
+import com.example.sacudeycome.presentador.Metricas;
 import com.example.sacudeycome.presentador.ServicesHttp_POST;
 import com.example.sacudeycome.presentador.ShakeDetector;
 
@@ -42,13 +44,12 @@ import java.util.Calendar;
 
 public class SelectorActivity extends AppCompatActivity implements SensorEventListener {
 
-    private final ArrayList<String[]> listaMenus = new ArrayList<String[]>();
-
     private TextView titulo;
     private TextView descripcion;
     private TextView precio;
     private Button finalizarButton;
 
+    private ArrayList<String[]> listaMenus = new ArrayList<String[]>();
     private ArrayList<String> destinos = new ArrayList<String>();
 
     private int idMenu = 0;
@@ -61,6 +62,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     private String cuerpoMensaje;
 
     public IntentFilter filtro;
+    private Conexiones conexion = new Conexiones();
     private ReceptorOperacion receiver = new SelectorActivity.ReceptorOperacion();
 
     private static final String URI_EVENTO = "http://so-unlam.net.ar/api/api/event";
@@ -70,7 +72,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selector);
-        cargarLista();
+        listaMenus = MiAplicacion.cargarLista();
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
         titulo = findViewById(R.id.titulo);
         descripcion = findViewById(R.id.desc);
@@ -89,8 +91,8 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
         SQLiteDatabase db= dbhelper.getWritableDatabase();
         if(db != null){
-            ingresarMetrica("Cantidad Shakes mediodia", contShakes, "De 12:00 a 16:00");
-            ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00");
+            Metricas.ingresarMetrica("Cantidad Shakes mediodia", contShakes, "De 12:00 a 16:00",SelectorActivity.this);
+            Metricas.ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00",SelectorActivity.this);
         }else
         {
             Log.d("ERROR CREAR LA BASE","ERROR" );
@@ -117,10 +119,10 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 Calendar rightNow = Calendar.getInstance();
                 int horaActual = rightNow.get(Calendar.HOUR_OF_DAY);
                 Log.d("HORA","Hora actual: " + horaActual);
-               if(horaActual > 12 & horaActual< 16)
-                  actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes);
-                else if(horaActual > 20)
-                  actualizarMetrica("Cantidad Shakes noche",  ++contShakes);
+               if(horaActual >= 12 & horaActual < 16)
+                  Metricas.actualizarMetrica("Cantidad Shakes mediodia",  ++contShakes,SelectorActivity.this);
+                else if(horaActual >= 20)
+                   Metricas.actualizarMetrica("Cantidad Shakes noche",  ++contShakes,SelectorActivity.this);
             }
         });
     }
@@ -133,28 +135,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             finish();
         }
     };
-
-    private void chequearConexionInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            Log.d( "ChequeoInternet","Hay Conexion a Internet ");
-
-        }else{
-            Log.d( "ChequeoInternet","No hay Conexion a Internet ");
-        }
-
-    }
-
-    private void ingresarMetrica(String titulo, int contadorShakes, String rango ) {
-        MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
-        dbhelper.insertar(titulo,contadorShakes,rango);
-    }
-
-   public void actualizarMetrica(String titulo, int contadorShakes){
-       MyOpenHelper dbhelper= new MyOpenHelper(SelectorActivity.this);
-       dbhelper.actualizar(titulo,contadorShakes);
-    }
 
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     public void cargarMenu(int numMenu) {
@@ -204,20 +184,6 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 imagen.setImageDrawable(myDrawable);
                 break;
         }
-
-    }
-
-
-    public void cargarLista() {
-        listaMenus.add(("Muzzarella-460-Salsa de tomate, muzzarella, aceitunas").split("-"));
-        listaMenus.add(("Huevo-500-Salsa de tomate, muzzarella, huevo duro, oregano, aceitunas").split("-"));
-        listaMenus.add(("Fugazzetta-500-Cebolla, muzzarella, adobo p/pizza, aceitunas").split("-"));
-        listaMenus.add(("Fugazzeta con panceta-550-Muzzarella, cebolla, panceta, adobo p/pizza, aceitunas").split("-"));
-        listaMenus.add(("Jamon-550-Salsa de tomate, muzzarella, jamon, oregano, aceitunas").split("-"));
-        listaMenus.add(("Jamon y morrones-600-Salsa de tomate, muzzarella, jamon, morrones asados, oregano, aceitunas").split("-"));
-        listaMenus.add(("Napolitana-510-Salsa de tomate, muzzarella, tomate en rodajas, provenzal, aceitunas").split("-"));
-        listaMenus.add(("Calabresa-610-Salsa de tomate, muzzarella,longaniza, morron asado en tiras, oregano, aceitunas").split("-"));
-        listaMenus.add(("Roquefort-610-Salsa de tomate, muzzarella, roquefort, oregano, aceitunas").split("-"));
     }
 
     @Override
@@ -251,12 +217,14 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
                 new SendMailTask(SelectorActivity.this).execute("sacudeycome@gmail.com",
                         "sacudeycome123", destinos, "Pedido confirmado... alta pizza", cuerpoMensaje);
                 Log.d("tiempo", "Transcurrido: " + ((MiAplicacion) getApplication()).getTiempoInicio());
-                chequearConexionInternet();
-                configurarBroadcastReceiver();
-                String username= ((MiAplicacion) getApplication()).getUsuario();
-                registrarEventoEnServidor("Pedido Registrado", " El usuario " + username + " se ha realizado el pedido");
-
-
+                if(conexion.chequearConexionInternet()){
+                    configurarBroadcastReceiver();
+                    String username= ((MiAplicacion) getApplication()).getUsuario();
+                    registrarEventoEnServidor("Pedido Registrado", " El usuario " + username + " se ha realizado el pedido");
+                    Log.d( "ChequeoInternet","Hay Conexion a Internet ");
+                }
+                else
+                    Log.d( "ChequeoInternet","No hay Conexion a Internet ");
             }
         }
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();

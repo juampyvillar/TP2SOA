@@ -11,10 +11,13 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.sacudeycome.presentador.Conexiones;
 import com.example.sacudeycome.presentador.ServicesHttp_POST;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MiAplicacion extends Application {
     private String token;
@@ -26,7 +29,9 @@ public class MiAplicacion extends Application {
     private static final String URI_ACTUALIZAR = "http://so-unlam.net.ar/api/api/refresh";
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new MiAplicacion.ReceptorOperacion();
+    private Conexiones conexion = new Conexiones();
 
+    private static final ArrayList<String[]> listaMenus = new ArrayList<String[]>();
 
     public String getToken() {
         return token;
@@ -54,15 +59,18 @@ public class MiAplicacion extends Application {
 
     public void actualizarToken_refresh(){
         //solicitud al servidor y actualizar token
-        chequearConexionInternet();
-        configurarBroadcastReceiver();
-
-            Log.d("actualizartoken","Biennnnn2");
+        if(conexion.chequearConexionInternet())
+        {
+            configurarBroadcastReceiver();
             Intent i = new Intent(MiAplicacion.this, ServicesHttp_POST.class);
             i.putExtra("metodo","PUT");
             i.putExtra("uri", URI_ACTUALIZAR);
             startService(i);
-
+            Log.d( "ChequeoInternet","Hay Conexion a Internet ");
+        }
+        else {
+            Log.d( "ChequeoInternet","No hay Conexion a Internet ");
+        }
     }
 
         public void actualizarTiempoTranscurrido(){
@@ -74,24 +82,12 @@ public class MiAplicacion extends Application {
                 if(elapsedMinutos>topeMinutos){
                     actualizarToken_refresh();
                     tiempoInicio=tiempoActual;
-
             }
             Log.d("tiempo:","MiAplicacion: " + tiempoInicio);
             Log.d("tiempo:","MiAplicacion: tiempo transcurrido: " + elapsedMinutos);
 
     }
 
-    private void chequearConexionInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            Log.d( "ChequeoInternet","Hay Conexion a Internet ");
-
-        }else{
-            Log.d( "ChequeoInternet","No hay Conexion a Internet ");
-        }
-
-    }
     private void configurarBroadcastReceiver(){
         filtro = new IntentFilter("com.example.intentservice.intent.action.RUN");
         filtro.addCategory(Intent.CATEGORY_DEFAULT);
@@ -104,6 +100,19 @@ public class MiAplicacion extends Application {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public static ArrayList<String[]> cargarLista() {
+        listaMenus.add(("Muzzarella-460-Salsa de tomate, muzzarella, aceitunas").split("-"));
+        listaMenus.add(("Huevo-500-Salsa de tomate, muzzarella, huevo duro, oregano, aceitunas").split("-"));
+        listaMenus.add(("Fugazzetta-500-Cebolla, muzzarella, adobo p/pizza, aceitunas").split("-"));
+        listaMenus.add(("Fugazzeta con panceta-550-Muzzarella, cebolla, panceta, adobo p/pizza, aceitunas").split("-"));
+        listaMenus.add(("Jamon-550-Salsa de tomate, muzzarella, jamon, oregano, aceitunas").split("-"));
+        listaMenus.add(("Jamon y morrones-600-Salsa de tomate, muzzarella, jamon, morrones asados, oregano, aceitunas").split("-"));
+        listaMenus.add(("Napolitana-510-Salsa de tomate, muzzarella, tomate en rodajas, provenzal, aceitunas").split("-"));
+        listaMenus.add(("Calabresa-610-Salsa de tomate, muzzarella,longaniza, morron asado en tiras, oregano, aceitunas").split("-"));
+        listaMenus.add(("Roquefort-610-Salsa de tomate, muzzarella, roquefort, oregano, aceitunas").split("-"));
+        return listaMenus;
     }
 
     public class ReceptorOperacion extends BroadcastReceiver {
