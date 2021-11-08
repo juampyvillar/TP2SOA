@@ -10,6 +10,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -91,6 +92,14 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         if(db != null){
             Metricas.ingresarMetrica("Cantidad Shakes mediodia", contShakes, "De 12:00 a 16:00",SelectorActivity.this);
             Metricas.ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00",SelectorActivity.this);
+            String query=null;
+            Cursor c;
+            c=db.rawQuery("select * from main.metrica",null);
+            contShakes= Integer.parseInt(c.getString(1));
+            Toast.makeText(getApplicationContext(),"Cantidad Shakes Mediodia:"+contShakes,Toast.LENGTH_SHORT);
+            c.moveToNext();
+            contShakes=Integer.parseInt(c.getString(1));
+            Toast.makeText(getApplicationContext(),"Cantidad shakes noche:" + contShakes,Toast.LENGTH_SHORT);
         }else
         {
             Log.d("ERROR CREAR LA BASE","ERROR" );
