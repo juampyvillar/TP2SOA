@@ -94,12 +94,17 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
             Metricas.ingresarMetrica("Cantidad Shakes noche", contShakes, "De 20:00 a 00:00",SelectorActivity.this);
             String query=null;
             Cursor c;
-            c=db.rawQuery("select * from main.metrica",null);
+
+            c=db.rawQuery("select * from main.Metrica",null);
+            c.moveToFirst();
             contShakes= Integer.parseInt(c.getString(1));
-            Toast.makeText(getApplicationContext(),"Cantidad Shakes Mediodia:"+contShakes,Toast.LENGTH_SHORT);
+            Log.d("Contador de shakes" , "Shakes Mediodia: " + contShakes);
+            Toast.makeText(getApplicationContext(),"Cantidad shakes mediodia:"+contShakes,Toast.LENGTH_SHORT).show();
             c.moveToNext();
             contShakes=Integer.parseInt(c.getString(1));
-            Toast.makeText(getApplicationContext(),"Cantidad shakes noche:" + contShakes,Toast.LENGTH_SHORT);
+            Log.d("Contador de shakes" , "Shakes Noche: " + contShakes);
+            Toast.makeText(getApplicationContext(),"Cantidad shakes noche:" + contShakes,Toast.LENGTH_SHORT).show();
+
         }else
         {
             Log.d("ERROR CREAR LA BASE","ERROR" );
