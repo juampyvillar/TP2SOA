@@ -31,7 +31,6 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         String values="(" +  "'" + metrica  + "'" + "," + valor + "," + "'" + rango + "'" + ")";
         if(bd != null){
             bd.execSQL(" INSERT OR IGNORE INTO " + TABLA + " VALUES " + values );
-            //" WHERE NOT EXISTS(SELECT 1 FROM Metrica WHERE nombre = " + "'"+metrica+"')"
 
             bd.close();
         }
