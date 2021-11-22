@@ -83,7 +83,7 @@ public class SelectorActivity extends AppCompatActivity implements SensorEventLi
         Log.d("Token Refresh", ((MiAplicacion) getApplication()).getToken_refresh());
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        mAccelerometer = mSensorManager
+        mAccelerometer = mSensorManagerconex
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         ((MiAplicacion) getApplication()).actualizarTiempoTranscurrido();
 
